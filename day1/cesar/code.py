@@ -33,26 +33,25 @@ right = 0
 # Can look: up, down, left, right
 looking = "up"
 
-# Main loop
-for char in get_input():
-    # Skip unwanted characters
-    if char == "," or char == " ":
-        continue
+parsed_input = get_input().split(', ')
 
+# Main loop
+for char in parsed_input:
     # If it's a turn
-    if char == "R" or char == "L":
-        looking = get_new_direction(looking, char)
+    if char.startswith("R") or char.startswith("L"):
+        looking = get_new_direction(looking, char[0])
 
     # If it's a number
-    if char.isdigit():
+    digit = char[1:]
+    if digit.isdigit():
         if looking == "up":
-            up += int(char)
+            up += int(digit)
         elif looking == "down":
-            down += int(char)
+            down += int(digit)
         elif looking == "left":
-            left += int(char)
+            left += int(digit)
         elif looking == "right":
-            right += int(char)
+            right += int(digit)
 
 # Get coordinates
 distance = abs(up - down) + abs(left - right)

@@ -11,12 +11,12 @@ end
 for j = 1:size(inp, 1)
 
     winner = '\0'::Char
-    winn = 0
+    winn = 10000
 
     cs = counter(inp[j,:])
 
     for k in keys(cs)
-        if k != '\0' && cs[k] > winn
+        if k != '\0' && cs[k] < winn
             winner = k
             winn = cs[k]
         end
@@ -28,3 +28,4 @@ end
 print("\n")
 
 # Answer1: tzstqsua
+# Answer2: myregdnr

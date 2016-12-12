@@ -14,7 +14,10 @@ def most_common(word):
     s0 = sorted(mc, key=itemgetter(0))
     s1 = sorted(s0, key=itemgetter(1), reverse = True)
     return reduce(lambda c1, c2: c1+c2,map(lambda t: t[0],s1[:5]))
-    
+
+def rotate_char(c, n):
+    return chr(((ord(c) - 97 + n) % 26) + 97)
+
 n = 0
 with open('input.txt','r') as rooms:
     for line in rooms:
@@ -22,5 +25,13 @@ with open('input.txt','r') as rooms:
         mc = most_common(word)
         if hs == mc:
             n += int(number)
+            # Part II
+            new_word = ""
+            for c in word:
+                new_word += rotate_char(c, int(number))
+            if "pole" in new_word:
+                print('Contains "Pole":    {}\tRoom {}'.format(new_word,number))
 
-print('The answer is always',n)
+print('The answer for Part I is always',n)
+
+

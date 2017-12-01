@@ -13,3 +13,14 @@ solveCaptcha = foldr (\new (acc, last) -> if new == last then (acc + new, new) e
 
 
 answer1 = fst $ solveCaptcha (makeAlmostCircular $ map digitToInt input)
+
+
+-- Useful for this case. https://stackoverflow.com/a/16379481
+rotate n xs = bs ++ as where (as, bs) = splitAt n xs
+
+
+answer2 = sum (zipWith s dinput rot)
+    where s = \x y -> if x == y then x else 0
+          dinput = map digitToInt input
+          rot = rotate (div (length input) 2) dinput
+

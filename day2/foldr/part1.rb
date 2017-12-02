@@ -1,10 +1,7 @@
 checksum = 0
 while line = gets
   line = line.chomp.split(' ').map(&:to_i)
-  min = line.min
-  max = line.max
-  checksum += max - min
+  checksum += line.max - line.min
 end
-
 puts checksum
 

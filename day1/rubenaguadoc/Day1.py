@@ -2,17 +2,17 @@
 
 numbers = input("C-v tu input:\n")
 numbers = list(numbers)
-sum = 0
+suma = 0
 
 for index, value in enumerate(numbers):
     if(numbers[index - 1] == value):
-        sum = sum + int(value)
+        suma = suma + int(value)
 
-print(sum)
+print(suma)
 
-sum = 0
+suma = 0
 for index, value in enumerate(numbers):
     if(numbers[int(index - len(numbers) / 2)] == value):
-        sum = sum + int(value)
+        suma = suma + int(value)
 
-print(sum)
+print(suma)

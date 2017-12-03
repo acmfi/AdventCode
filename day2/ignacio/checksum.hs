@@ -4,9 +4,18 @@ input = [[1236, 741, 557, 1029, 144, 101, 1968, 2159, 1399, 80, 1139, 1167, 1695
 minmax :: Ord a => [a] -> (a, a)
 minmax = \xs -> (minimum xs, maximum xs)
 
+
+checksum :: (Num a, Ord a) => [[a]] -> a
 checksum xs = sum $ checksumRow xs
-    where checksumRow l = map (\(a, b) -> b - a) $ map minmax l
+    where checksumRow l = map ((\(a, b) -> b - a) . minmax) l
 
 
 star1 = checksum input
 
+
+checksum' :: Integral a => [[a]] -> a
+checksum' xs = sum $ map checksumRow' xs
+    where checksumRow' l = head [div x y | x <- l, y <- l, x /= y, (y * div x y) == x] -- Unsafe
+
+
+star2 = checksum' input

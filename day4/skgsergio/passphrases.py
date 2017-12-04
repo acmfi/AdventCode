@@ -12,14 +12,27 @@ def part_1_is_valid_pwd(pwd):
         return True
 
 
-def part_1(pwd_list):
-    valids = 0
+def part_2_is_valid_pwd(pwd):
+    pwd_l = pwd.split()
+
+    if len(pwd_l) != len(set(''.join(sorted(w)) for w in pwd_l)):
+        return False
+    else:
+        return True
+
+
+def check_pwds(pwd_list):
+    part_1_valids = 0
+    part_2_valids = 0
 
     for pwd in pwd_list:
         if part_1_is_valid_pwd(pwd):
-            valids += 1
+            part_1_valids += 1
 
-    return valids
+        if part_2_is_valid_pwd(pwd):
+            part_2_valids += 1
+
+    return part_1_valids, part_2_valids
 
 
 if __name__ == "__main__":
@@ -33,4 +46,6 @@ if __name__ == "__main__":
         for pwd in f:
             pwd_list.append(pwd)
 
-    print("Valids passwords: {}".format(part_1(pwd_list)))
+    part_1_valids, part_2_valids = check_pwds(pwd_list)
+    print("Valids passwords (part 1): {}".format(part_1_valids))
+    print("Valids passwords (part 2): {}".format(part_2_valids))

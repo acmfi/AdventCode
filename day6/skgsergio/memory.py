@@ -3,7 +3,7 @@
 import sys
 
 
-def part_1(l):
+def solve(l):
     p = []
 
     while l not in p:
@@ -19,7 +19,16 @@ def part_1(l):
             l[i] += 1
             m -= 1
 
-    return len(p)
+    return p
+
+
+def part_1(l):
+    return len(solve(l))
+
+
+def part_2(l):
+    p = solve(l)
+    return len(p) - p.index(l)
 
 
 if __name__ == '__main__':
@@ -31,4 +40,5 @@ if __name__ == '__main__':
     with open(sys.argv[1], 'r') as f:
         l = list(map(int, f.read().split()))
 
-    print(part_1(l))
+    print("Part 1: {}".format(part_1(l)))
+    print("Part 2: {}".format(part_2(l)))

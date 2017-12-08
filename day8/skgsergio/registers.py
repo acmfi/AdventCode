@@ -5,7 +5,7 @@ import sys
 from collections import defaultdict
 
 
-def part_1(instructions):
+def solve(instructions):
     ops = {
         '>': (lambda x, y: x > y),
         '<': (lambda x, y: x < y),
@@ -18,12 +18,16 @@ def part_1(instructions):
     }
 
     v = defaultdict(int)
+    m = 0
 
     for i in instructions:
         if ops[i[5]](v[i[4]], int(i[6])):
             v[i[0]] = ops[i[1]](v[i[0]], int(i[2]))
 
-    return v[max(v.keys(), key=(lambda k: v[k]))]
+        if v[i[0]] > m:
+            m = v[i[0]]
+
+    return v[max(v.keys(), key=(lambda k: v[k]))], m
 
 
 if __name__ == '__main__':
@@ -38,4 +42,6 @@ if __name__ == '__main__':
             if len(i) != 0:
                 ins.append(i)
 
-    print("Part 1: {}".format(part_1(ins)))
+    max_val, max_known = solve(ins)
+    print("Part 1: {}".format(max_val))
+    print("Part 2: {}".format(max_known))

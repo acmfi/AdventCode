@@ -1,6 +1,7 @@
 import re
 
 file = open('towerData', 'r')
+# file = open('day7/rubenaguadoc/towerData', 'r')
 inpt = file.read()
 
 lefties = []

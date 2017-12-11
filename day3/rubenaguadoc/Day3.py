@@ -1,3 +1,5 @@
+from Grid import SSD
+
 inpt = 325489
 
 currentPointer = 1
@@ -24,3 +26,5 @@ d5 = esq5 - inpt
 dist = min([abs(x) for x in [d1, d2, d3, d4, d5]])
 
 print(2 * counter - dist)
+
+SSD(inpt)

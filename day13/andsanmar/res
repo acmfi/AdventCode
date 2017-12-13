@@ -1,0 +1,5 @@
+3, 2, 4, 4
+MCM = 12
+
+estrategia:
+Para ver en cada uno de los esados cual es el resultado, tenemos que ver que el módulo sea igual al estado en el qe se encuentra al comenzar

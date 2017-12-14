@@ -5,7 +5,7 @@ with open("input", "r") as file:
         r[int(a[0])] = int(a[1])
     s = 0
     for x in r.keys():
-        if(x % (r[x]-1) == 0 and (x / (r[x] - 1)) % 2 == 0):
+        if(x % (2*(r[x]-1)) == 0):
             s = x*r[x] + s
     print(s)
     f = False
@@ -13,8 +13,7 @@ with open("input", "r") as file:
     while(not f):
         f = True
         for x in r.keys():
-            if(((c + x) % (r[x]-1)) == 0
-               and ((c + x) / (r[x] - 1)) % 2 == 0):
+            if((c + x) % (2*(r[x]-1)) == 0):
                 f = False
         if(f):
             print(c)

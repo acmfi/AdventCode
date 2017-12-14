@@ -3,3 +3,5 @@
 *.php
 .*
 \#*
+*.pyc
+__pycache__

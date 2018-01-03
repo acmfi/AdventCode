@@ -24,5 +24,3 @@ while not severity == 0:
     count += 1
 
 print(count - 1)
-# 259572
-# 3943252

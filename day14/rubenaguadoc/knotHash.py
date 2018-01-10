@@ -1,6 +1,3 @@
-rawInpt = '130,126,1,11,140,2,255,207,18,254,246,164,29,104,0,224'
-
-
 def reverse(idx, pre, chain):
     while idx > 256:
         idx -= 256
@@ -43,25 +40,18 @@ def xor(chain, idx):
     return res
 
 
-# Part 1
-inpt = rawInpt.split(',')
-inpt = [int(x) for x in inpt]
-chain = proccess(inpt)
-print(chain[0] * chain[1])
-
-# Part 2
-# rawInpt = 'AoC 2017'
-inpt = [ord(str(x)) for x in rawInpt]
-inpt = inpt + [17, 31, 73, 47, 23]
-inpt = inpt * 64
-chain = proccess(inpt)
-chainRes = []
-for i in range(0, 256, 16):
-    chainRes = chainRes + [xor(chain, i)]
-chainRes = [str(hex(x)).replace('0x', '') for x in chainRes]
-res = ""
-for i, v in enumerate(chainRes):
-    while len(chainRes[i]) < 2:
-        chainRes[i] = '0' + v
-    res += chainRes[i]
-print(res)
+def knotHash(rawInpt):
+    inpt = [ord(str(x)) for x in rawInpt]
+    inpt = inpt + [17, 31, 73, 47, 23]
+    inpt = inpt * 64
+    chain = proccess(inpt)
+    chainRes = []
+    for i in range(0, 256, 16):
+        chainRes = chainRes + [xor(chain, i)]
+    chainRes = [str(hex(x)).replace('0x', '') for x in chainRes]
+    res = ""
+    for i, v in enumerate(chainRes):
+        while len(chainRes[i]) < 2:
+            chainRes[i] = '0' + v
+        res += chainRes[i]
+    return res

@@ -5,3 +5,5 @@
 \#*
 *.pyc
 __pycache__
+*.hi
+*.o

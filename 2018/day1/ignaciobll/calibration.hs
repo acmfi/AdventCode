@@ -4,7 +4,6 @@ import qualified Data.IntSet as IntSet
 star1 :: Integral a => [a] -> a
 star1 = sum
 
-
 -- 0,03s user 0,01s system 98% cpu 0,035 total
 star2'' :: [Int] -> Int
 star2'' ls = go 0 (IntSet.singleton 0) rep
@@ -12,7 +11,6 @@ star2'' ls = go 0 (IntSet.singleton 0) rep
         go freq set (x:xs)
           | IntSet.member (freq+x) set = freq+x
           | otherwise = go (freq + x) (IntSet.insert (freq + x) set) xs
-
 
 -- 0,17s user 0,01s system 99% cpu 0,176 total
 star2' :: [Int] -> Int

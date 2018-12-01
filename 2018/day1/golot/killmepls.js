@@ -1,0 +1,1 @@
+eval(document.body.firstElementChild.textContent.split("\n").reduce((a, x) => a+x))

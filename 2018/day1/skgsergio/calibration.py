@@ -1,12 +1,12 @@
 import sys
 from itertools import accumulate, cycle
 
-def solve(input):    
-    c = [int(n.strip()) for n in input]
+def solve(i):
+    c = [int(n.strip()) for n in i]
 
     part1 = sum(c)
 
-    r = set()
+    r = set([0])
     part2 = next(n for n in accumulate(cycle(c)) if n in r or r.add(n))
 
     return part1, part2

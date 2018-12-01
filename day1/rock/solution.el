@@ -1,4 +1,6 @@
-(let ((numbers '(+15
+(require 'cl)
+
+(setq numbers '(+15
                 -7
                 +16
                 +5
@@ -1005,6 +1007,27 @@
                 -2
                 -5
                 +24
-                +130793)))
-  (apply '+ numbers)
-  )
+                +130793))
+
+(defun repeated (data elem)
+  (let* ((all_elems (nth 2 data))
+         (acc (nth 1 data))
+         (s (+ acc elem))
+         (new_all_elems (cons acc all_elems))
+         (just_repeated (member s new_all_elems))
+         (stop (equal "halt" (nth 0 data)))
+         )
+    (cond (stop (list "halt" acc nil))
+          (just_repeated (list "halt" s nil))
+          (t (list "cont" s new_all_elems)))))
+
+(defun find_duplicate (value list numbers)
+  (setq result (reduce #'repeated numbers :initial-value (list "cont" value list)))
+  (if (equal "halt" (nth 0 result))
+      (nth 1 result)
+    (find_duplicate (nth 1 result) (nth 2 result) numbers)))
+
+(let ((initial_list '(0))
+      (n '(+7 +7 -2 -7 -4))
+      (n numbers))
+   (find_duplicate 0 initial_list n))

@@ -18,4 +18,3 @@ main = do
   let nums = Prelude.map read' $ lines text
   putStrLn $ show $ sum nums
   putStrLn $ show $ star2 nums
-  --putStrLn $ show $ infsum (concat $ repeat nums)

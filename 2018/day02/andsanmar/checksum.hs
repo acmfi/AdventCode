@@ -29,4 +29,3 @@ main = do
   let ids = lines text
   putStrLn $ show $ star1 ids
   putStrLn $ show $ star2 ids
-  --putStrLn $ show $ infsum (concat $ repeat nums)

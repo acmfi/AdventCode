@@ -1,8 +1,8 @@
 import java.io.File
 
 fun main(args: Array<String>) {
-    println("part1: " + part1("src/day1/input"))
-    println("part2: " + part2("src/day1/input"))
+    println("part1: " + part1("2018/day01/sami286/input"))
+    println("part2: " + part2("2018/day01/sami286/input"))
 }
 
 fun part1(input: String): Int = File(input)

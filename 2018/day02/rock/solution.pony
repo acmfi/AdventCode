@@ -6,7 +6,7 @@ actor Main
   new create(env: Env) =>
     let caps = recover val FileCaps.>set(FileRead).>set(FileStat) end
     try
-      let fpath = FilePath(env.root as AmbientAuth, "../input", caps)?
+      let fpath = FilePath(env.root as AmbientAuth, "./input", caps)?
       with file = OpenFile(fpath) as File
       do
         let words = Array[String]

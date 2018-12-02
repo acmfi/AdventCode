@@ -30,6 +30,7 @@ Leaderboard: 196473-6dc11ccc
 - Julia
 - Swift
 - Bash
+- Wren
 - Lua
 - C
 - C++

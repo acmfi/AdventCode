@@ -1,5 +1,8 @@
-const input =
-require('./input').input
+const inpt = require('./input').input;
+
+console.time('Bucle');
+const inpt1 =
+inpt
 .split(/\n/)
 .map(e => e.split(' '))
 .map(e =>
@@ -11,7 +14,24 @@ require('./input').input
     h: parseInt(e[3].split('x')[1])
   })
 );
+console.timeEnd('Bucle');
 
+
+console.time('Regex');
+const reg = /#(\d+) @ (\d+),(\d+): (\d+)x(\d+)\n/g;
+let inpt2 = [];
+while (true) {
+  let match = reg.exec(inpt);
+  if (match == null) break;
+  inpt2.push({
+    id: parseInt(match[1]),
+    x: parseInt(match[2]),
+    y: parseInt(match[3]),
+    w: parseInt(match[4]),
+    h: parseInt(match[5])
+  });
+}
+console.timeEnd('Regex');
 
 // 1 && 2
 
@@ -21,7 +41,7 @@ let nOverlap = new Set();
 let ids = {};
 let acc = 0;
 
-Array.prototype.forEach.call(input, e => {
+Array.prototype.forEach.call(inpt1, e => {
   let overlap = false;
   for (let i = 0; i < e.w * e.h; i++) {
     const compound = `${e.x + i % e.w},${e.y + Math.floor(i / e.w)}`;

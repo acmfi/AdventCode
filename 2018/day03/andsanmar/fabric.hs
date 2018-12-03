@@ -13,7 +13,7 @@ star1 :: [Set (Int,Int)] -> Int
 star1 c = length $ toList $ fst $ Prelude.foldl (\(a,b) s -> (union a (intersection b s), union b s)) (empty,empty) c
 
 claim_to_set :: Claim -> Set (Int,Int)
-claim_to_set ((x1,y1),(a1,b1)) = fromList $ concat $ Prelude.foldl (\l v -> (zip [x1..x1+a1-1] (repeat v)):l) [] [y1..y1+b1-1]
+claim_to_set ((x1,y1),(a1,b1)) = fromList $ [(x,y) | x <- [x1..x1+a1-1], y <- [y1..y1+b1-1]]
 
 star2 :: [Set (Int,Int)] -> Int -> Int
 star2 (c:cs) n = if all (\x -> Data.Set.null (intersection c x)) cs then n else star2 (cs++[c]) (n+1)

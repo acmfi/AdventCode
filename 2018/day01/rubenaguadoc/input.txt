@@ -1,5 +1,4 @@
-module.exports.input =
-`+9
++9
 +15
 -14
 +10
@@ -1031,5 +1030,4 @@ module.exports.input =
 +14
 +8
 +17
-+120917`
-;
++120917

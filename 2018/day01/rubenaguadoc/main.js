@@ -1,4 +1,4 @@
-const input = require('./input').input.split(/\n/).map(e => parseInt(e));
+const input = require('fs').readFileSync('./input.txt').toString().trim().split(/\n/).map(e => parseInt(e));
 
 // Part 1
 console.log(input.reduce((a, b) => a + b));

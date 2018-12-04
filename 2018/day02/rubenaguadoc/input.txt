@@ -1,5 +1,4 @@
-module.exports.input =
-`wlpiogsvdfecjdqmnxakudrhbz
+wlpiogsvdfecjdqmnxakudrhbz
 wbpioesvyfecjuqmlxaktdrhbz
 blviogavyfecjuqmnxaktdrhbz
 wlpiogsvydecjuqmnipktdrhbz
@@ -248,5 +247,4 @@ wlpiogsfyfncjuqmnxsktdrhbz
 wlpioggvyfecjufmnxaktdrebz
 wlpiogsvyfecfujmnxaktdrwbz
 rlpiogsvyfecjlqmnxaktdqhbz
-wlpfogsvyfecjuimnxaktfrhbz`
-;
+wlpfogsvyfecjuimnxaktfrhbz

@@ -1,4 +1,4 @@
-const input = require('./input').input.split(/\n/);
+const input = require('fs').readFileSync('./input.txt').toString().trim().split(/\n/);
 
 // 1
 let count = new Array();

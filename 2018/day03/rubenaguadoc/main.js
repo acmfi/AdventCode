@@ -1,4 +1,4 @@
-const inpt = require('./input').input;
+const inpt = require('fs').readFileSync('./input.txt').toString().trim();
 
 console.time('Bucle');
 const inpt1 =
@@ -41,7 +41,7 @@ let nOverlap = new Set();
 let ids = {};
 let acc = 0;
 
-Array.prototype.forEach.call(inpt1, e => {
+inpt1.forEach(e => {
   let overlap = false;
   for (let i = 0; i < e.w * e.h; i++) {
     const compound = `${e.x + i % e.w},${e.y + Math.floor(i / e.w)}`;

@@ -3,9 +3,9 @@ import Data.Char (toUpper)
 red :: (String, String) -> String
 red (q,[]) = q
 red ([],(x:xs)) = red ([x],xs)
-red (y,(x:xs))
-  | react (last y) x = red (init y, xs)
-  | otherwise = red (y ++ [x], xs)
+red ((y:ys),(x:xs))
+  | react y x = red (ys, xs)
+  | otherwise = red (x:y:ys, xs)
 
 same :: Char -> Char -> Bool
 same x y = toUpper y == toUpper x

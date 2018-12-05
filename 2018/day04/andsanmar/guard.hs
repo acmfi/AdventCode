@@ -28,7 +28,7 @@ star1 m = (fst u) * (fst $ Prelude.foldl1 (\x y -> if snd y > snd x then y else 
 frequency :: (Ord a) => [a] -> [(a, Int)]
 frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
 
-getHours :: Map Int [Int] -> (Int, [Int]) -> Int -> (Int, [Int])
+getHours :: Ord a => Map a [a] -> (a, [a]) -> a -> (a, [a])
 getHours m (a,b) k = if (length u) > (length b) then (k, u) else (a,b)
   where Just u = Map.lookup k m
 
@@ -36,7 +36,7 @@ star2 :: Map Int [Int] -> Int
 star2 m = (fst u) * (fst $ snd u)
   where u = Prelude.foldl (getSnoozy m) (0,(0, 0)) (Map.keys m)
 
-getSnoozy :: Map Int [Int] -> (Int, (Int, Int)) -> Int -> (Int, (Int, Int))
+getSnoozy :: Ord a => Map a [a] -> (a, (a, Int)) -> a -> (a, (a, Int))
 getSnoozy m (a,b) k = if snd j > snd b then (k, j) else (a,b)
   where j = foldl1 (\x y -> if snd x > snd y then x else y) (frequency u)
         Just u = Map.lookup k m

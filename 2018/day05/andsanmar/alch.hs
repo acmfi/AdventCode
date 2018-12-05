@@ -11,7 +11,7 @@ same :: Char -> Char -> Bool
 same x y = toUpper y == toUpper x
 
 react :: Char -> Char -> Bool
-react x y = toUpper y == toUpper x && y /= x
+react x y = same x y && y /= x
 
 star2 :: String -> Int
 star2 s = minimum $ map (\x -> length $ red ([], del x s)) ['a'..'z']

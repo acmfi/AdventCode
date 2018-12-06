@@ -14,9 +14,13 @@ def solve(d):
     sz = defaultdict(int)
     inf = set()
 
+    limit = 10000
+    shared = 0
+
     for x in range(x_max + 1):
         for y in range(y_max + 1):
             m_dist = sorted([(abs(px - x) + abs(py - y), rg) for rg, (px, py) in cs_rg.items()])
+            shared += (sum(d[0] for d in m_dist) < limit)
 
             if len(m_dist) == 1 or m_dist[0][0] != m_dist[1][0]:
                 rg = m_dist[0][1]
@@ -27,7 +31,7 @@ def solve(d):
 
     part1 = max(s for rg, s in sz.items() if rg not in inf)
 
-    part2 = None
+    part2 = shared
 
     return part1, part2
 

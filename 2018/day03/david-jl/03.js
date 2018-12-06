@@ -1,13 +1,12 @@
 let fs = require("fs");
 const datos = fs.readFileSync("./input.txt").toString().split("\r\n");
 
-//var datos = ["#1 @ 1,3: 4x4", "#2 @ 3,1: 4x4", "#3 @ 5,5: 2x2"];
-var tablero = new Array(1000);
-for (var i = 0; i < tablero.length; i++) {
+let tablero = new Array(1000);
+for (let i = 0; i < tablero.length; i++) {
     tablero[i] = new Array(1000);
     tablero[i].fill(0)
 }
-var parte1 = () => {
+let parte1 = () => {
     let contador = 0;
     datos.forEach(linea =>{
         linea = linea.split(" ");
@@ -32,7 +31,7 @@ var parte1 = () => {
 };
 
 
-var parte2 = () => {
+let parte2 = () => {
     let ids = new Array(1346);
     for(let i = 0; i<ids.length; i++)
         ids[i] = i + 1;

@@ -1,7 +1,7 @@
 let fs = require("fs");
 const datos = fs.readFileSync("./input.txt").toString().split("\n");
 
-var parte1 = () =>{
+let parte1 = () =>{
     let dobles = 0, triples = 0;
     datos.forEach(linea => {
         let letras = new Array(300);
@@ -23,7 +23,7 @@ var parte1 = () =>{
     return dobles*triples;
 };
 
-var parte2 = () => {
+let parte2 = () => {
     let sol = ["", 0];
     datos.forEach(linea1 =>{
         datos.forEach(linea2 => {

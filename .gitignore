@@ -12,3 +12,4 @@
 __pycache__
 *.hi
 *.o
+*input*

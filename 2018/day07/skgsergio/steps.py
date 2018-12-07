@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 
+import copy
 import string
 from collections import defaultdict
 
@@ -24,7 +25,29 @@ def solve(d):
 
     part1 = ''.join(o)
 
-    part2 = None
+    t = 0
+    st = set(o)
+    rq = copy.deepcopy(g)
+    wk = [[0, None] for i in range(5)]
+
+    while st or any(w[0] > 0 for w in wk):
+        w = list([s for s in st if all(s not in r for _, r in rq.items())])
+
+        for i in range(5):
+            wk[i][0] -= 1
+
+            if wk[i][0] <= 0:
+                if wk[i][1] in rq:
+                    del rq[wk[i][1]]
+
+                if w:
+                    wk[i][1] = w.pop()
+                    wk[i][0] = 60 + ord(wk[i][1]) - ord('A')
+                    st.remove(wk[i][1])
+
+        t += 1
+
+    part2 = t
 
     return part1, part2
 

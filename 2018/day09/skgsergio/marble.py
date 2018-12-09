@@ -4,10 +4,7 @@ import sys
 from collections import defaultdict, deque
 
 
-def solve(d):
-    pls = int(d.split()[0])
-    pts = int(d.split()[6])
-
+def marble(pls, pts):
     s = defaultdict(int)
     c = deque([0])
 
@@ -20,9 +17,16 @@ def solve(d):
             c.rotate(-1)
             c.append(m)
 
-    part1 = max(s.values())
+    return max(s.values())
 
-    part2 = None
+
+def solve(d):
+    pls = int(d.split()[0])
+    pts = int(d.split()[6])
+
+    part1 = marble(pls, pts)
+
+    part2 = marble(pls, (pts * 100))
 
     return part1, part2
 
@@ -35,11 +39,9 @@ if __name__ == '__main__':
 
     d = None
     with open(sys.argv[1], 'r') as f:
-        d = f.read().splitlines()
+        d = f.read().strip()
 
-    for l in d:
-        print(l)
-        part1, part2 = solve(l)
+    part1, part2 = solve(d)
 
-        print(f"Part 1: {part1}")
-        print(f"Part 2: {part2}")
+    print(f"Part 1: {part1}")
+    print(f"Part 2: {part2}")

@@ -1,4 +1,4 @@
-import Data.Sequence as Seq (Seq((:<|)), fromList, (><), (<|), (|>), singleton, splitAt, lookup, length, (!?))
+import Data.Sequence as Seq (Seq((:<|)), (><), (<|), (|>), singleton, splitAt, lookup, length, (!?))
 import System.Environment (getArgs)
 
 star1 :: Int -> Int -> Int

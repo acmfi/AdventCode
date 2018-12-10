@@ -33,7 +33,7 @@ def solve(d):
 
     fig, ax = plt.subplots()
     ax.invert_yaxis()
-    ax.set_aspect(1.5)
+    ax.set_aspect(1)
     ax.set_title("seconds =  {}".format(it))
     ax.plot([p['x'] + (p['vx'] * it) for p in pts],
             [p['y'] + (p['vy'] * it) for p in pts], 'o')

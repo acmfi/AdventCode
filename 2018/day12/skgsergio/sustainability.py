@@ -7,17 +7,13 @@ def sum_plants(pots):
     return sum((i - diff) for i, c in enumerate(pots) if c == '#')
 
 
-def solve(d):
-    init = d[0].split(': ')[1]
-    rules = {}
+def grow(pots, rules, gens):
+    psum = sum_plants(pots)
+    last_diffs = []
+    max_diffs = 10
+    stable_gen = None
 
-    for r in d[2:]:
-        rs = r.split(' => ')
-        rules[rs[0]] = rs[1]
-
-    pots = init
-
-    for i in range(20):
+    for gen in range(1, gens + 1):
         pots = f"....{pots}...."
         growth = ""
 
@@ -26,9 +22,35 @@ def solve(d):
 
         pots = growth
 
-    part1 = str(sum_plants(pots))
+        csum = sum_plants(pots)
+        last_diffs.append(csum - psum)
+        psum = csum
 
-    part2 = None
+        if len(last_diffs) > max_diffs:
+            last_diffs.pop(0)
+
+        if len(last_diffs) == max_diffs and len(set(last_diffs)) == 1:
+            stable_gen = gen
+            break
+
+    if stable_gen and gens > stable_gen:
+        return (gens - stable_gen) * last_diffs[0] + sum_plants(pots)
+
+    else:
+        return sum_plants(pots)
+
+
+def solve(d):
+    init = d[0].split(': ')[1]
+    rules = {}
+
+    for r in d[2:]:
+        rs = r.split(' => ')
+        rules[rs[0]] = rs[1]
+
+    part1 = grow(init, rules, 20)
+
+    part2 = grow(init, rules, 50000000000)
 
     return part1, part2
 

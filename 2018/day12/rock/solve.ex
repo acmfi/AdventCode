@@ -86,6 +86,8 @@ defmodule Solve do
     set
   end
 
+  defp parse_rule(""), do: []
+
   defp parse_rule(rule) do
     [pre, post] = String.split(rule, " => ", strip: true)
 

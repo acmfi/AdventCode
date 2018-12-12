@@ -2,13 +2,14 @@
 import sys
 
 
-def sum_plants(pots):
-    diff = (len(pots) - 100) // 2
+def sum_plants(pots, orig_len):
+    diff = (len(pots) - orig_len) // 2
     return sum((i - diff) for i, c in enumerate(pots) if c == '#')
 
 
 def grow(pots, rules, gens):
-    psum = sum_plants(pots)
+    olen = len(pots)
+    psum = sum_plants(pots, olen)
     last_diffs = []
     max_diffs = 10
     stable_gen = None
@@ -22,7 +23,7 @@ def grow(pots, rules, gens):
 
         pots = growth
 
-        csum = sum_plants(pots)
+        csum = sum_plants(pots, olen)
         last_diffs.append(csum - psum)
         psum = csum
 
@@ -34,10 +35,10 @@ def grow(pots, rules, gens):
             break
 
     if stable_gen and gens > stable_gen:
-        return (gens - stable_gen) * last_diffs[0] + sum_plants(pots)
+        return (gens - stable_gen) * last_diffs[0] + sum_plants(pots, olen)
 
     else:
-        return sum_plants(pots)
+        return sum_plants(pots, olen)
 
 
 def solve(d):

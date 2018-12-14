@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
 
-import re
 from collections import defaultdict
 
 
@@ -49,7 +48,7 @@ def solve(gsn, grid=300):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: {} <input>\n\tMy input: 6303".format(sys.argv[0]),
+        print(f"Usage: {sys.argv[0]} <input>\n\tMy input: 6303",
               file=sys.stderr)
         exit(1)
 

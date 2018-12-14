@@ -29,7 +29,7 @@ def solve(n):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: {} <input>\n\tMy input: 637061".format(sys.argv[0]),
+        print(f"Usage: {sys.argv[0]} <input>\n\tMy input: 637061",
               file=sys.stderr)
         exit(1)
 

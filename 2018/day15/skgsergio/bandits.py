@@ -43,7 +43,8 @@ class Game:
     elfs_mustnt_die: bool
 
     class ElfDeath(Exception):
-        pass
+        def __init__(self, unit):
+            super().__init__(f"Elf died, need more AP: {unit}")
 
     def __init__(self, gmap_input: List[str], elf_ap: Optional[int] = None, elfs_cant_die: bool = False):
         self.units = []
@@ -108,23 +109,29 @@ class Game:
         if not enemies:
             return True
 
-        # Get available possitions near enemies
-        enemies_neighbors = set(p for e in enemies for p in e.loc.neighbors)
-        other_unit_locs = set(u.loc for u in self.units if u.alive and unit != u)
-        target_locs = set(p for p in enemies_neighbors if not self.walls[p] and p not in other_unit_locs)
-
-        # Try to move near an enemy
-        movement = self._move(unit.loc, target_locs)
-        if movement:
-            unit.loc = movement
-
+        # Check if there is any enemy in the unit neighbors
         enemy_neighbors = [e for e in enemies if e.loc in unit.loc.neighbors]
+
+        # If there is no enemy near try to move towards one
+        if not enemy_neighbors:
+            # Get available possitions near enemies
+            enemies_neighbors = set(p for e in enemies for p in e.loc.neighbors)
+            other_unit_locs = set(u.loc for u in self.units if u.alive and unit != u)
+            target_locs = set(p for p in enemies_neighbors if not self.walls[p] and p not in other_unit_locs)
+
+            movement = self._move(unit.loc, target_locs)
+            if movement:
+                unit.loc = movement
+                enemy_neighbors = [e for e in enemies if e.loc in unit.loc.neighbors]
+
+        # If there is at least one enemy in the neighbors attack him
         if enemy_neighbors:
             # Get the enemy with the less hp, in case of tie use the minimum loc
             enemy = min(enemy_neighbors, key=lambda e: (e.hp, e.loc))
             # Attack the enemy
             enemy.hp -= unit.ap
 
+            # If we are in a elfs_cant_die game raise an exception if an Elf dies
             if self.elfs_cant_die and enemy.team == Team.ELF and not enemy.alive:
                 raise Game.ElfDeath(enemy)
 
@@ -188,8 +195,7 @@ def solve(d):
     while not part2:
         try:
             part2 = Game(d, elf_ap=p2_elf_ap, elfs_cant_die=True).run()
-        except Game.ElfDeath as e:
-            print(f"Elf died, need more AP: {e}", file=sys.stderr)
+        except Game.ElfDeath:
             p2_elf_ap += 1
 
     return part1, part2

@@ -86,7 +86,7 @@ class Game:
 
         return True
 
-    def _action(self, unit: Unit):
+    def _action(self, unit):
         """
         Performs actions for one unit (movement and attack).
 

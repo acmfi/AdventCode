@@ -40,10 +40,10 @@ class Unit:
 class Game:
     units: List[Unit]
     walls: Dict[Point, bool]
-    elfs_mustnt_die: bool
+    elfs_cant_die: bool
 
     class ElfDeath(Exception):
-        def __init__(self, unit):
+        def __init__(self, unit: Unit):
             super().__init__(f"Elf died, need more AP: {unit}")
 
     def __init__(self, gmap_input: List[str], elf_ap: Optional[int] = None, elfs_cant_die: bool = False):

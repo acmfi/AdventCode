@@ -40,20 +40,30 @@ class Unit:
 class Game:
     units: List[Unit]
     walls: Dict[Point, bool]
+    elfs_mustnt_die: bool
 
-    def __init__(self, gmap_input: List[str]):
+    class ElfDeath(Exception):
+        pass
+
+    def __init__(self, gmap_input: List[str], elf_ap: Optional[int] = None, elfs_cant_die: bool = False):
         self.units = []
         self.walls = {}
+        self.elfs_cant_die = elfs_cant_die
 
         for x, line in enumerate(gmap_input):
             for y, ch in enumerate(line):
                 self.walls[Point(x, y)] = ch == '#'
 
                 if ch in 'EG':
-                    self.units.append(Unit(
+                    u = Unit(
                         team=Team.ELF if ch == 'E' else Team.GOBLIN,
                         loc=Point(x, y)
-                    ))
+                    )
+
+                    if elf_ap and u.team == Team.ELF:
+                        u.ap = elf_ap
+
+                    self.units.append(u)
 
     def run(self) -> int:
         """
@@ -115,6 +125,9 @@ class Game:
             # Attack the enemy
             enemy.hp -= unit.ap
 
+            if self.elfs_cant_die and enemy.team == Team.ELF and not enemy.alive:
+                raise Game.ElfDeath(enemy)
+
         return False
 
     def _move(self, origin_loc: Point, target_locs: Set[Point]) -> Optional[Point]:
@@ -171,6 +184,13 @@ def solve(d):
     part1 = Game(d).run()
 
     part2 = None
+    p2_elf_ap = 4
+    while not part2:
+        try:
+            part2 = Game(d, elf_ap=p2_elf_ap, elfs_cant_die=True).run()
+        except Game.ElfDeath as e:
+            print(f"Elf died, need more AP: {e}", file=sys.stderr)
+            p2_elf_ap += 1
 
     return part1, part2
 

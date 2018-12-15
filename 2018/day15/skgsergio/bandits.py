@@ -5,7 +5,7 @@ import sys
 
 from enum import Enum
 from dataclasses import dataclass
-from typing import NamedTuple, List, Dict, Set, Optional
+from typing import NamedTuple, List, Dict, Set, Tuple, Optional
 
 
 class Team(Enum):
@@ -21,7 +21,7 @@ class Point(NamedTuple):
     def neighbors(self) -> List[Point]:
         return [self + p for p in {Point(0, 1), Point(1, 0), Point(0, -1), Point(-1, 0)}]
 
-    def __add__(self, o: Point) -> Point:
+    def __add__(self, o) -> Point:
         return Point(self.x + o.x, self.y + o.y)
 
 
@@ -43,10 +43,10 @@ class Game:
     elfs_cant_die: bool
 
     class ElfDeath(Exception):
-        def __init__(self, unit: Unit):
+        def __init__(self, unit: Unit) -> None:
             super().__init__(f"Elf died, need more AP: {unit}")
 
-    def __init__(self, gmap_input: List[str], elf_ap: Optional[int] = None, elfs_cant_die: bool = False):
+    def __init__(self, gmap_input: List[str], elf_ap: Optional[int] = None, elfs_cant_die: bool = False) -> None:
         self.units = []
         self.walls = {}
         self.elfs_cant_die = elfs_cant_die
@@ -146,11 +146,12 @@ class Game:
         # Get locs for all alive units
         unit_locs = set(u.loc for u in self.units if u.alive)
         # Dictionary of possible movements
+        possibles: Dict[Optional[Point], Tuple[int, Optional[Point]]]
         possibles = {origin_loc: (0, None)}
         # List of visits to perform
         visits = [(origin_loc, 0)]
         # Set of seen locs
-        seen = set()
+        seen: Set[Point] = set()
 
         new_loc = None
 
@@ -195,7 +196,7 @@ def solve(d):
     while not part2:
         try:
             part2 = Game(d, elf_ap=p2_elf_ap, elfs_cant_die=True).run()
-        except Game.ElfDeath:
+        except Game.ElfDeath as e:
             p2_elf_ap += 1
 
     return part1, part2

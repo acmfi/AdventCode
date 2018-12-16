@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import sys
 
+from collections import defaultdict
+
+
 OPS = {
     'addr': lambda R, a, b: R[a] + R[b],
     'addi': lambda R, a, b: R[a] + b,
@@ -22,27 +25,23 @@ OPS = {
 
 
 def get_valid_ops(s):
-    valid = []
+    valid = set()
 
     for op in OPS.keys():
         res = s['before'][:]
         res[s['C']] = OPS[op](s['before'], s['A'], s['B'])
 
         if res == s['after']:
-            valid.append(op)
+            valid.add(op)
 
     return valid
 
 
 def solve(d):
     # Process this shitty multipart input
-    if '\n\n\n\n' in d:
-        input_parts = d.split('\n\n\n\n')
-        part1_input = [l for l in input_parts[0].splitlines() if l]
-        part2_input = input_parts[1].splitlines()
-    else:
-        part1_input = [l for l in d.splitlines() if l]
-        part2_input = None
+    input_parts = d.split('\n\n\n\n')
+    part1_input = [l for l in input_parts[0].splitlines() if l]
+    part2_input = input_parts[1].splitlines()
 
     # Parse part 1 input
     samples = []
@@ -57,10 +56,35 @@ def solve(d):
             sample['after'] = list(map(int, l.split(':')[1].strip()[1:-1].split(',')))
             samples.append(sample)
 
-    # Run part 1
+    # Part 1: Number of samples matching to 3 or more ops
     part1 = sum(len(get_valid_ops(s)) >= 3 for s in samples)
 
-    part2 = None
+    # Part 2: Use the samples to reverse the opcodes
+    reverse_ops = {}
+
+    i = 0
+    while len(reverse_ops) < len(OPS):  # Iterate until we have all ops reversed
+        # Just in case we need to do more than one round lets use the mod len(samples)
+        s = samples[i % len(samples)]
+
+        # If the opcode is not yet reversed try to do it with this sample
+        if s['opcode'] not in reverse_ops:
+            # Remove the already reversed from the valid ops for the sample
+            ops = get_valid_ops(s) - set(reverse_ops.values())
+
+            # If we only have one matching operation save it
+            if len(ops) == 1:
+                reverse_ops[s['opcode']] = ops.pop()
+
+        i += 1
+
+    # Run the part 2 input
+    reg = defaultdict(int)
+    for op in part2_input:
+        opc, A, B, C = map(int, op.split())
+        reg[C] = OPS[reverse_ops[opc]](reg, A, B)
+
+    part2 = reg[0]
 
     return part1, part2
 

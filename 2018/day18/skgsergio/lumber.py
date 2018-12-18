@@ -38,16 +38,15 @@ def solve(area):
     it = 0
     saves = []
     while not part1 or not part2:
-        it += 1
         area = iteration(area)
         res = ''.join([''.join(x) for x in area])
 
-        if not part1 and it == 10:
+        if not part1 and (it + 1) == 10:
             part1 = res.count('#') * res.count('|')
 
         if res in saves:
             idx = saves.index(res)
-            per = it - idx + 1
+            per = it - idx
             target = (1000000000 % per)
 
             while (idx + 1) % per != target:
@@ -56,6 +55,8 @@ def solve(area):
             part2 = saves[idx].count('#') * saves[idx].count('|')
         else:
             saves.append(res)
+
+        it += 1
 
     return part1, part2
 

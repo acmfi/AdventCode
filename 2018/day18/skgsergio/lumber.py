@@ -31,19 +31,31 @@ def iteration(area):
     return res
 
 
-def solve(d):
-    area = d
-    for i in range(10):
-        area = iteration(area)
-
-    count = {'.': 0, '|': 0, '#': 0}
-    for row in area:
-        for c in row:
-            count[c] += 1
-
-    part1 = count['#'] * count['|']
-
+def solve(area):
+    part1 = None
     part2 = None
+
+    it = 0
+    saves = []
+    while not part1 or not part2:
+        it += 1
+        area = iteration(area)
+        res = ''.join([''.join(x) for x in area])
+
+        if not part1 and it == 10:
+            part1 = res.count('#') * res.count('|')
+
+        if res in saves:
+            idx = saves.index(res)
+            per = it - idx + 1
+            target = (1000000000 % per)
+
+            while (idx + 1) % per != target:
+                idx += 1
+
+            part2 = saves[idx].count('#') * saves[idx].count('|')
+        else:
+            saves.append(res)
 
     return part1, part2
 

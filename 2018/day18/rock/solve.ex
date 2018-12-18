@@ -17,7 +17,7 @@ defmodule Solve do
 
   @turns 1_000_000_000
   defp ex2(game) do
-    {cycle, fixed} =
+    {cycle, fixed, game} =
       Enum.reduce_while(Range.new(0, @turns), {game, %{}}, fn i, {game, prevs} ->
         {_, x, y} = game
         ng = play!(game, 1)
@@ -29,16 +29,18 @@ defmodule Solve do
 
           prev ->
             cycle = i - prev
-            {:halt, {cycle, i}}
+            {:halt, {cycle, i, {ng, x, y}}}
         end
       end)
 
     pattern = rem(@turns - fixed, cycle)
-    similar_count = fixed + pattern - cycle
+    rest = pattern - 1
 
-    IO.puts("Cycle: #{cycle}, Similar iteration: #{similar_count}, let's calculate it...")
+    IO.puts(
+      "Cycle: #{cycle}, fixed: #{fixed} pattern: #{pattern}, let's calculate it with #{rest} iterations more..."
+    )
 
-    game |> play!(similar_count) |> magic_number() |> IO.inspect()
+    game |> play!(rest) |> magic_number()
   end
 
   defp magic_number(game) do

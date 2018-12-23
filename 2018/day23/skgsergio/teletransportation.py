@@ -45,7 +45,7 @@ def solve(d):
 
     part2 = None
     while not part2:
-        bc = [0, 0, 0, 0]
+        bc = (0, 0, 0, 0)
         d_bots = [b // div for b in bots]
 
         for x in range(mnx, mxx + 1):

@@ -12,9 +12,6 @@ class Nanobot(namedtuple('Nanobot', ['x', 'y', 'z', 'radius'])):
     def dist(self, other):
         return abs(self.x - other.x) + abs(self.y - other.y) + abs(self.z - other.z)
 
-    def __floordiv__(self, n):
-        return Nanobot(self.x // n, self.y // n, self.z // n, self.radius // n)
-
 
 def solve(d):
     bots = []
@@ -31,28 +28,24 @@ def solve(d):
     # Part 2
     mxx = max(bots, key=lambda b: b.x).x
     mnx = min(bots, key=lambda b: b.x).x
+    mxy = max(bots, key=lambda b: b.y).y
+    mny = min(bots, key=lambda b: b.y).y
+    mxz = max(bots, key=lambda b: b.z).z
+    mnz = min(bots, key=lambda b: b.z).z
 
     div = 1
     while div < mxx - mnx:
         div *= 2
 
-    mxx //= div
-    mnx //= div
-    mxy = max(bots, key=lambda b: b.y).y // div
-    mny = min(bots, key=lambda b: b.y).y // div
-    mxz = max(bots, key=lambda b: b.z).z // div
-    mnz = min(bots, key=lambda b: b.z).z // div
-
     part2 = None
     while not part2:
         bc = (0, 0, 0, 0)
-        d_bots = [b // div for b in bots]
 
-        for z in range(mnz, mxz + 1):
-            for y in range(mny, mxy + 1):
-                for x in range(mnx, mxx + 1):
+        for z in range(mnz, mxz + 1, div):
+            for y in range(mny, mxy + 1, div):
+                for x in range(mnx, mxx + 1, div):
                     pt = Nanobot(x, y, z, None)
-                    c = sum(b.dist(pt) <= b.radius for b in d_bots)
+                    c = sum((b.dist(pt) - b.radius) // div <= 0 for b in bots)
 
                     if c < bc[-1] or \
                        (c == bc[-1] and (abs(x) + abs(y) + abs(z)) > (abs(bc[0]) + abs(bc[1]) + abs(bc[2]))):
@@ -64,9 +57,9 @@ def solve(d):
             part2 = abs(bc[0]) + abs(bc[1]) + abs(bc[2])
 
         else:
-            mxx, mnx = (bc[0] + 1) * 2, (bc[0] - 1) * 2
-            mxy, mny = (bc[1] + 1) * 2, (bc[1] - 1) * 2
-            mxz, mnz = (bc[2] + 1) * 2, (bc[2] - 1) * 2
+            mxx, mnx = (bc[0] + div), (bc[0] - div)
+            mxy, mny = (bc[1] + div), (bc[1] - div)
+            mxz, mnz = (bc[2] + div), (bc[2] - div)
             div //= 2
 
     return part1, part2

@@ -48,9 +48,9 @@ def solve(d):
         bc = (0, 0, 0, 0)
         d_bots = [b // div for b in bots]
 
-        for x in range(mnx, mxx + 1):
+        for z in range(mnz, mxz + 1):
             for y in range(mny, mxy + 1):
-                for z in range(mnz, mxz + 1):
+                for x in range(mnx, mxx + 1):
                     pt = Nanobot(x, y, z, None)
                     c = sum(b.dist(pt) <= b.radius for b in d_bots)
 

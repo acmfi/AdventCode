@@ -59,10 +59,6 @@ defmodule Solve do
     p1 |> Enum.zip(p2) |> Enum.map(fn {x, y} -> abs(x - y) end) |> Enum.sum()
   end
 
-  # defp dist({x, y, z, a}, {x2, y2, z2, a2}) do
-  #   abs(x - x2) + abs(y - y2) + abs(z - z2) + abs(a - a2)
-  # end
-
   defp parse!(t) do
     t
     |> String.split("\n")

@@ -10,26 +10,22 @@ import (
 func main() {
 	// Part 1
 	scanner := bufio.NewScanner(openInput())
-	var total, fuel int = 0, 0
+	var total_p1, fuel1 = 0, 0
 	for scanner.Scan() {
 		mass, _ := strconv.Atoi(scanner.Text())
-		fuel = calcFuel(mass)
-		total += fuel
+		fuel1 = calcFuel(mass)
+		total_p1 += fuel1
 	}
-	fmt.Println("Part 1 - Total fuel:", total)
+	fmt.Println("Part 1 - Total fuel:", total_p1)
 
 	// Part 2
 	scanner = bufio.NewScanner(openInput())
-	total, fuel = 0, 0
+    var total_p2 = 0
 	for scanner.Scan() {
 		mass, _ := strconv.Atoi(scanner.Text())
-		fuel = calcFuel(mass)
-		for fuel > 0 {
-			total += fuel
-			fuel = calcFuel(fuel)
-		}
+	    total_p2 += calcFuelRec(mass)
 	}
-	fmt.Println("Part 2 - Total fuel:", total)
+	fmt.Println("Part 2 - Total fuel:", total_p2)
 }
 
 func openInput() (file *os.File) {
@@ -43,5 +39,14 @@ func openInput() (file *os.File) {
 
 func calcFuel(mass int) (fuel int) {
 	fuel = (mass / 3) - 2
+	return
+}
+
+func calcFuelRec(mass int) (total int) {
+	fuel := calcFuel(mass)
+	for fuel > 0 {
+		total += fuel
+		fuel = calcFuel(fuel)
+	}
 	return
 }

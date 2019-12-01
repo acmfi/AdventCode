@@ -20,10 +20,10 @@ func main() {
 
 	// Part 2
 	scanner = bufio.NewScanner(openInput())
-    var total_p2 = 0
+	var total_p2 = 0
 	for scanner.Scan() {
 		mass, _ := strconv.Atoi(scanner.Text())
-	    total_p2 += calcFuelRec(mass)
+		total_p2 += calcFuelRec(mass)
 	}
 	fmt.Println("Part 2 - Total fuel:", total_p2)
 }

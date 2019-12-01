@@ -2,6 +2,7 @@
 import sys
 from itertools import accumulate, cycle
 
+
 def solve(i):
     c = [int(n.strip()) for n in i]
 
@@ -15,14 +16,13 @@ def solve(i):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: {} <input>".format(sys.argv[0]),
-              file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} <input>", file=sys.stderr)
         exit(1)
 
     i = None
     with open(sys.argv[1], 'r') as f:
         i = f.readlines()
-    
+
     part1, part2 = solve(i)
 
     print(f"Part 1: {part1}")

@@ -1,4 +1,4 @@
-let track = require('fs').readFileSync('../skgsergio/input').toString().split(/\n/).map(e => e.match(/[\s\S]{1}/g) || []);
+let track = require('fs').readFileSync('input.txt').toString().split(/\n/).map(e => e.match(/[\s\S]{1}/g) || []);
 
 let carts = new Array();
 let id = 0;
@@ -66,7 +66,7 @@ while (carts.length > 1) {
     for (let j = 0; j < carts.length; j++) {
       let c = carts[j];
       if (c.x === cart.x && c.y === cart.y && c.id !== cart.id) {
-        console.log(`Collision: ${cart.y},${cart.x}`);
+        console.log(`Collision: ${cart.x},${cart.y}`);
         carts.splice(i, 1);
         if (i < j) {
           j--;
@@ -88,4 +88,4 @@ while (carts.length > 1) {
   carts.sort(sortCarts);
 }
 
-console.log(carts[0]);
+console.log(`End position: ${carts[0].x},${carts[0].y-1}`);

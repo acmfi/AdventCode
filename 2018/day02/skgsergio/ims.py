@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 
+
 def solve(l):
     tw = 0
     th = 0
@@ -19,14 +20,13 @@ def solve(l):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: {} <input>".format(sys.argv[0]),
-              file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} <input>", file=sys.stderr)
         exit(1)
 
     i = None
     with open(sys.argv[1], 'r') as f:
         i = f.read().splitlines()
-    
+
     part1, part2 = solve(i)
 
     print(f"Part 1: {part1}")

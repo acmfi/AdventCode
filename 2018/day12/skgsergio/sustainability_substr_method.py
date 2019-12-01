@@ -50,8 +50,7 @@ def solve(d):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: {} <input>".format(sys.argv[0]),
-              file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} <input>", file=sys.stderr)
         exit(1)
 
     d = None

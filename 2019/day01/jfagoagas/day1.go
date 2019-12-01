@@ -1,36 +1,52 @@
 package main
+
 import (
-    "fmt"
-    "bufio"
-    "os"
-    "strconv"
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
 )
 
 func main() {
-    input := os.Args[1]
-    file, err := os.Open(input)
-    if err != nil {
-        os.Exit(1)
-    }
-    defer file.Close()
+	// Part 1
+	scanner := bufio.NewScanner(openInput())
+	var total_p1, fuel1 = 0, 0
+	for scanner.Scan() {
+		mass, _ := strconv.Atoi(scanner.Text())
+		fuel1 = calcFuel(mass)
+		total_p1 += fuel1
+	}
+	fmt.Println("Part 1 - Total fuel:", total_p1)
 
-    scanner := bufio.NewScanner(file)
-    var total int = 0
-    var fuel int = 0
-    for scanner.Scan() {
-        mass, _ := strconv.Atoi(scanner.Text())
-        // Part 1
-        fuel = calcFuel(mass)
-        // Part 2
-        for fuel > 0 {
-            total += fuel
-            fuel = calcFuel(fuel)
-        }
-    }
-    fmt.Printf("%d\n", total)
+	// Part 2
+	scanner = bufio.NewScanner(openInput())
+	var total_p2 = 0
+	for scanner.Scan() {
+		mass, _ := strconv.Atoi(scanner.Text())
+		total_p2 += calcFuelRec(mass)
+	}
+	fmt.Println("Part 2 - Total fuel:", total_p2)
+}
+
+func openInput() (file *os.File) {
+	input := os.Args[1]
+	file, err := os.Open(input)
+	if err != nil {
+		os.Exit(1)
+	}
+	return
 }
 
 func calcFuel(mass int) (fuel int) {
-    fuel = (mass / 3) - 2
-    return
+	fuel = (mass / 3) - 2
+	return
+}
+
+func calcFuelRec(mass int) (total int) {
+	fuel := calcFuel(mass)
+	for fuel > 0 {
+		total += fuel
+		fuel = calcFuel(fuel)
+	}
+	return
 }

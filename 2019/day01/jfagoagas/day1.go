@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+    // Part 1
 	input1 := os.Args[1]
 	file1, err := os.Open(input1)
 	if err != nil {
@@ -15,7 +16,6 @@ func main() {
 	}
 	defer file1.Close()
 
-	// Part 1
 	scanner1 := bufio.NewScanner(file1)
 	var total, fuel int = 0, 0
 	for scanner1.Scan() {
@@ -25,6 +25,7 @@ func main() {
 	}
 	fmt.Println("Part 1 - Total fuel:", total)
 
+    // Part 2
 	input2 := os.Args[1]
 	file2, err := os.Open(input2)
 	if err != nil {
@@ -32,7 +33,6 @@ func main() {
 	}
 	defer file2.Close()
 
-	// Part 2
 	scanner2 := bufio.NewScanner(file2)
 	total, fuel = 0, 0
 	for scanner2.Scan() {

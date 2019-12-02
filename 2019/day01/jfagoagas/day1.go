@@ -29,8 +29,7 @@ func main() {
 }
 
 func openInput() (file *os.File) {
-	input := os.Args[1]
-	file, err := os.Open(input)
+	file, err := os.Open("input.txt")
 	if err != nil {
 		os.Exit(1)
 	}

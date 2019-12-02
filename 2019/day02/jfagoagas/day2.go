@@ -24,7 +24,6 @@ func findOpCode(alarm []int, opcode int) (res int) {
 		for j := 0; j < 100; j++ {
 			if calcOpCode(alarm, i, j) == opcode {
 				return 100*i + j
-				fmt.Printf("OpCode %d --> Noun: %s, Verb: %s", i, j)
 			}
 		}
 	}

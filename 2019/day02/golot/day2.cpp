@@ -57,7 +57,7 @@ int main() {
     }  
   } catch (std::exception e) {
       std::cout << "Unexpected opcode in part 2" << std::endl;
-        return 1;
+      return 1;
   }
 
   return 1;

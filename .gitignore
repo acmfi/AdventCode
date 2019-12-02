@@ -10,5 +10,6 @@
 \#*
 *.pyc
 __pycache__
+venv
 *.hi
 *.o

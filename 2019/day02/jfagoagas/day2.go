@@ -13,11 +13,10 @@ var opcode int = 19690720
 func main() {
 	// Part 1
 	readFile()
-	fmt.Println("Original IntCode\n", alarm)
-	fmt.Println("\nPart 1 -- Alarm[0] stores", calcOpCode(alarm, 12, 2))
+	fmt.Println("Part 1 -- Alarm[0] stores", calcOpCode(alarm, 12, 2))
 	// Part 2
 	readFile()
-	fmt.Println("\nPart 2 -- Result Code:", findOpCode(alarm, opcode))
+	fmt.Println("Part 2 -- Result Code:", findOpCode(alarm, opcode))
 }
 
 func findOpCode(alarm []int, opcode int) (res int) {

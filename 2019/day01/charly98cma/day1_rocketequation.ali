@@ -1,0 +1,84 @@
+V "GNAT Lib v9"
+M P W=b
+P ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_SECONDARY_STACK
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U day1_rocketequation%b	day1_rocketequation.adb	6229f68b NE OO SU IL
+W ada%s			ada.ads			ada.ali
+W ada.command_line%s	a-comlin.adb		a-comlin.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+D ada.ads		20191030142400 76789da1 ada%s
+D a-comlin.ads		20191030142400 4aa66568 ada.command_line%s
+D a-except.ads		20191030142400 291912d5 ada.exceptions%s
+D a-inteio.ads		20191030142400 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20191030142400 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20191030142400 119b8fb3 ada.streams%s
+D a-tags.ads		20191030142400 491b781d ada.tags%s
+D a-textio.ads		20191030142400 881db35a ada.text_io%s
+D a-tiinio.ads		20191030142400 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20191030142400 0e9b276f ada.unchecked_conversion%s
+D day1_rocketequation.adb  20191201211632 56d9a91d day1_rocketequation%b
+D interfac.ads		20191030142400 5ab55268 interfaces%s
+D i-cstrea.ads		20191030142400 e53d8b8e interfaces.c_streams%s
+D system.ads		20191030142400 4635ec04 system%s
+D s-conca2.ads		20191030142400 02a0d7d0 system.concat_2%s
+D s-crtl.ads		20191030142400 0ebbdb71 system.crtl%s
+D s-exctab.ads		20191030142400 54135002 system.exception_table%s
+D s-ficobl.ads		20191030142400 078245e4 system.file_control_block%s
+D s-imgint.ads		20191030142400 02dbe0c2 system.img_int%s
+D s-parame.ads		20191030142400 48ec542b system.parameters%s
+D s-secsta.ads		20191030142400 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20191030142400 a7318a92 system.soft_links%s
+D s-stache.ads		20191030142400 a37c21ec system.stack_checking%s
+D s-stalib.ads		20191030142400 09bd3940 system.standard_library%s
+D s-stoele.ads		20191030142400 2dc34a04 system.storage_elements%s
+D s-traent.ads		20191030142400 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20191030142400 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20191030142400 1b7d22d2 system.wch_con%s
+X 1 ada.ads
+16K9*Ada 20e8 11|1r6 2r6 3r6 8r24 9r23 10r23
+X 2 a-comlin.ads
+36K13*Command_Line 144e21 11|3w10 10r27
+39V13*Argument_Count{natural} 11|14s36
+52V13*Argument{string} 11|29s23
+X 4 a-inteio.ads
+18K13*Integer_Text_IO[9|46] 11|1w10 8r28
+X 8 a-textio.ads
+49K13*Text_IO 471e16 11|2w10 9r27
+52P9*File_Type 11|16r15
+53n23*In_File{53E9} 11|28r23
+92U14*Open 11|27s7
+93p7 File{52P9} 11|27r12
+94e7 Mode{53E9} 11|28r12
+95a7 Name{string} 11|29r12
+263U14*Put_Line 11|22s10 46s10
+297X4*End_Error 11|45r12
+X 9 a-tiinio.ads
+51U14*Get 11|33s11[4|18]
+52p7 File{8|52P9} 11|33r15[4|18]
+53i7 Item{integer} 11|34r15[4|18]
+X 11 day1_rocketequation.adb
+5U11*day1_rocketequation 5b11 47l5 47t24
+8K12 IIO=8:28 33r7
+9K12 IO=9:27 16r12 22r7 27r4 28r20 45r9 46r7
+10K12 CL=10:27 14r33 29r20
+13i4 Sum{integer} 38m10 38r17 46r68
+13i9 TMP_Val{integer} 34m23 36r23 39m10
+13i18 TMP_Val_2{integer} 36m10 37r20 38r23 39r21
+14i4 N_Args{integer} 21r7
+15a4 MYNAME{string} 22r31
+16p4 Input{8|52P9} 27m20 27r20 33r23
+

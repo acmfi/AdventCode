@@ -17,9 +17,7 @@ func main() {
 	fmt.Println("\nPart 1 -- Alarm[0] stores", calcOpCode(alarm, 12, 2))
 	// Part 2
 	readFile()
-	fmt.Println("\nResult IntCode\n", alarm)
 	fmt.Println("\nPart 2 -- Result Code:", findOpCode(alarm, opcode))
-	fmt.Println("\nResult IntCode\n", alarm)
 }
 
 func findOpCode(alarm []int, opcode int) (res int) {
@@ -34,7 +32,11 @@ func findOpCode(alarm []int, opcode int) (res int) {
 	return 0
 }
 
-func calcOpCode(alarm []int, noun int, verb int) (pzero int) {
+func calcOpCode(input []int, noun int, verb int) (pzero int) {
+	/* Es importante hacer una copia ya que en cada iteracion
+	   se esta machacando el valor de la lista */
+	alarm := make([]int, len(input))
+	copy(alarm, input)
 	alarm[1] = noun
 	alarm[2] = verb
 	for i := 0; i < len(alarm); i += 4 {

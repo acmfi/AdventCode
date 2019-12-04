@@ -23,8 +23,7 @@ func findPwdCount(num []string) (count int) {
 				if num[i][2:3] <= num[i][3:4] {
 					if num[i][3:4] <= num[i][4:5] {
 						if num[i][4:5] <= num[i][5:6] {
-							if num[i][0:1] < num[i][1:2] && num[i][1:2] < num[i][2:3] && num[i][2:3] < num[i][3:4] && num[i][3:4] < num[i][4:5] && num[i][4:5] < num[i][5:6] {
-							} else {
+							if !(num[i][0:1] < num[i][1:2] && num[i][1:2] < num[i][2:3] && num[i][2:3] < num[i][3:4] && num[i][3:4] < num[i][4:5] && num[i][4:5] < num[i][5:6]) {
                                 //fmt.Printf("%s\n", num[i])
                                 count++
 						    }

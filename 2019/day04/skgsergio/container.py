@@ -12,8 +12,9 @@ def solve(init: int, end: int) -> Tuple[int, int]:
 
     for n in map(str, range(init, end + 1)):
         if list(n) == sorted(n):
-            p1c += max(Counter(n).values()) >= 2
-            p2c += 2 in Counter(n).values()
+            c = Counter(n).values()
+            p1c += max(c) >= 2
+            p2c += 2 in c
 
     return p1c, p2c
 

@@ -12,11 +12,7 @@ func byteCount(bytes []byte) map[byte]int {
 	count := map[byte]int{}
 
 	for _, b := range bytes {
-		if _, ok := count[b]; ok {
-			count[b] += 1
-		} else {
-			count[b] = 1
-		}
+		count[b] += 1
 	}
 
 	return count

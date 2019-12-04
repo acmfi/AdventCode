@@ -3,15 +3,19 @@ import sys
 
 from collections import Counter
 
+from typing import Tuple
 
-def part1(init: int, end: int) -> int:
-    c = 0
+
+def solve(init: int, end: int) -> Tuple[int, int]:
+    p1c = 0
+    p2c = 0
 
     for n in map(str, range(init, end + 1)):
-        if list(n) == sorted(n) and max(Counter(n).values()) >= 2:
-            c += 1
+        if list(n) == sorted(n):
+            p1c += max(Counter(n).values()) >= 2
+            p2c += 2 in Counter(n).values()
 
-    return c
+    return p1c, p2c
 
 
 if __name__ == '__main__':
@@ -21,4 +25,6 @@ if __name__ == '__main__':
 
     init, end = map(int, sys.argv[1].split("-"))
 
-    print(f"Part 1: {part1(init, end)}")
+    part1, part2 = solve(init, end)
+    print(f"Part 1: {part1}")
+    print(f"Part 2: {part2}")

@@ -12,11 +12,9 @@ class Intcode:
         self._eop = False
         self._result = -1
 
-    def _get(self, i: int, mode: int) -> int:
-        if mode:
-            return self._d[self._pc + i]
-        else:
-            return self._d[self._d[self._pc + i]]
+    def _get(self, i: int, immediate_mode: int) -> int:
+        value = self._d[self._pc + i]
+        return value if immediate_mode else self._d[value]
 
     def _set(self, i: int, value: int):
         self._d[self._d[self._pc + i]] = value

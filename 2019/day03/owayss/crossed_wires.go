@@ -114,7 +114,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Answer: %d\n", shortest)
+	fmt.Printf("answer: %d\n", shortest)
 }
 
 func min(a []int) (int, error) {

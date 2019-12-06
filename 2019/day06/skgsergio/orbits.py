@@ -6,13 +6,16 @@ from collections import defaultdict
 from typing import List, Dict
 
 
+UCOM = 'COM'
+
+
 def part1(data: List[List[str]]) -> int:
     omap: Dict[str, List[str]] = defaultdict(list)
     for o1, o2 in data:
         omap[o1].append(o2)
 
     orbits = {
-        'COM': 0
+        UCOM: 0
     }
 
     while omap:
@@ -26,8 +29,26 @@ def part1(data: List[List[str]]) -> int:
     return sum(orbits.values())
 
 
-def part2(data: List[List[str]]) -> int:
-    return 0
+def path_to_ucom(omap: Dict[str, str], init: str) -> List[str]:
+    path = []
+
+    visiting = init
+    while visiting != UCOM:
+        visiting = omap[visiting]
+        path.append(visiting)
+
+    return path
+
+
+def part2(data: List[List[str]], init: str, end: str) -> int:
+    romap: Dict[str, str] = {}
+    for o1, o2 in data:
+        romap[o2] = o1
+
+    p1 = set(path_to_ucom(romap, init))
+    p2 = set(path_to_ucom(romap, end))
+
+    return len(p1 - p2) + len(p2 - p1)
 
 
 if __name__ == '__main__':
@@ -41,4 +62,4 @@ if __name__ == '__main__':
             d.append(l.strip().split(')'))
 
     print(f"Part 1: {part1(d)}")
-    print(f"Part 2: {part2(d)}")
+    print(f"Part 2: {part2(d, 'YOU', 'SAN')}")

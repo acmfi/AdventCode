@@ -27,8 +27,6 @@ func countOrbits(orbits []string) (c int) {
 
 	for k := range count {
 		for i, ok := count[k]; ok; i, ok = count[i] {
-            fmt.Print("\n",count[k])
-            fmt.Print("\n",count[i])
 			c++
 		}
 	}

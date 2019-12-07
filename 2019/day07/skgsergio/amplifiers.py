@@ -7,16 +7,18 @@ from typing import List
 
 
 class Intcode:
-    def __init__(self, program: List[int], input_values: List[int]):
+    def __init__(self, program: List[int], input_values: List[int],
+                 pc: int = 0, output_halts: bool = False):
         self._d = program[:]
         self._inputs = input_values
+        self._output_halts = output_halts
 
         self._eop = False
-        self._pc = 0
+        self._pc = pc
         self._m1 = 0
         self._m2 = 0
         self._m3 = 0
-        self._result = 0
+        self._result = None
 
     # Decode functions
     def _digit(self, value: int, i: int) -> int:
@@ -54,6 +56,7 @@ class Intcode:
     def _op_out(self):
         self._result = self._get(1, 0)
         self._pc += 2
+        self._eop = self._output_halts
 
     def _op_jit(self):
         if self._get(1, self._m1) != 0:
@@ -125,7 +128,36 @@ def part1(program: List[int]) -> int:
 
 
 def part2(program: List[int]) -> int:
-    return 0
+    signal = 0
+
+    for p in permutations(range(5, 10)):
+        progs = []
+        inputs = []
+        for i in range(5):
+            progs.append(program[:])
+            inputs.append([p[i]])
+
+        last = None
+        amp = 0
+        pcs = [0] * 5
+        while amp is not None:
+            for i in range(5):
+                inputs[i].append(amp)
+
+                m = Intcode(progs[i], inputs[i], pc=pcs[i], output_halts=True)
+
+                amp = m.run()
+
+                progs[i] = m._d
+                pcs[i] = m._pc
+                inputs[i] = m._inputs
+
+            if amp:
+                last = amp
+
+        signal = max(signal, last)
+
+    return signal
 
 
 if __name__ == '__main__':

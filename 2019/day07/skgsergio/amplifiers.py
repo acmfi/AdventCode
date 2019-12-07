@@ -18,7 +18,7 @@ class Intcode:
         self._m1 = 0
         self._m2 = 0
         self._m3 = 0
-        self._result = None
+        self._result = -1
 
     # Decode functions
     def _digit(self, value: int, i: int) -> int:
@@ -137,10 +137,10 @@ def part2(program: List[int]) -> int:
             progs.append(program[:])
             inputs.append([p[i]])
 
-        last = None
+        last = 0
         amp = 0
         pcs = [0] * 5
-        while amp is not None:
+        while amp >= 0:
             for i in range(5):
                 inputs[i].append(amp)
 
@@ -152,7 +152,7 @@ def part2(program: List[int]) -> int:
                 pcs[i] = m._pc
                 inputs[i] = m._inputs
 
-            if amp:
+            if amp >= 0:
                 last = amp
 
         signal = max(signal, last)

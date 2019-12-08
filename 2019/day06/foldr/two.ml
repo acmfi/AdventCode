@@ -11,7 +11,7 @@ let read_lines name : string list =
     | None -> close_in ic; List.rev acc in
   loop []
 
-let input = read_lines "example2.txt"
+let input = read_lines "input.txt"
 
 let empty_graph = Nodes.empty, []
 
@@ -53,10 +53,10 @@ let rec steps_to_santa edges node visited : int =
   then 
     List.map (fun p -> 
       1 + (steps_to_santa edges p (Nodes.add node visited))
-    ) (jumps edges node |> List.filter (fun x -> Nodes.mem x visited)) |> min (List.length edges + 1)
+    ) (jumps edges node |> List.filter (fun x -> not (Nodes.mem x visited))) |> min (List.length edges + 1)
   else 0
 
 let () =
-  steps_to_santa in_edges start Nodes.empty |> print_int;
+  (steps_to_santa in_edges start Nodes.empty) - 2 |> print_int;
   print_newline ()
 

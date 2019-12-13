@@ -6,6 +6,14 @@ from typing import List, Dict, Tuple, Optional
 
 DEBUG = False
 
+TILECHR = {
+    0: ' ',
+    1: '█',
+    2: '⊞',
+    3: '⟺',
+    4: '•'
+}
+
 
 class Intcode:
     def __init__(self, program: List[int]):
@@ -185,22 +193,14 @@ def part1(data: List[int]) -> int:
 
 
 def draw_screen(screen: Dict[Tuple[int, int], int], score):
-    tilechr = {
-        0: ' ',
-        1: '█',
-        2: '⊞',
-        3: '⟺',
-        4: '•'
-    }
-
-    print('\033[2J\033[1;1H')
+    frame = '\033[2J\033[1;1H'
 
     for y in range(max(map(lambda x: x[1], screen.keys())) + 1):
         for x in range(max(map(lambda x: x[0], screen.keys())) + 1):
-            print(tilechr[screen.get((x, y), 0)], end='')
-        print()
+            frame += TILECHR[screen.get((x, y), 0)]
+        frame += "\n"
 
-    print(f"Score: {score}")
+    print(f"{frame}{score}")
 
 
 def part2(data: List[int], print_screen: bool) -> int:
@@ -249,10 +249,8 @@ def part2(data: List[int], print_screen: bool) -> int:
             else:
                 joystick = 0
 
-            if print_screen and c % 100 == 0:
-                import time
+            if print_screen:
                 draw_screen(tiles, score)
-                time.sleep(0.1)
 
         c += 1
 

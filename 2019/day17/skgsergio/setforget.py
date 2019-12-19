@@ -277,7 +277,7 @@ def part2(data: List[int]) -> int:
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} <input> [print]", file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} <input>", file=sys.stderr)
         exit(1)
 
     with open(sys.argv[1], 'r') as f:

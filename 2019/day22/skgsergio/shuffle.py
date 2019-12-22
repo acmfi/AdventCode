@@ -12,10 +12,11 @@ class Action(Enum):
     CUT = 2
 
 
-def shuffle(deck, techniques):
-    dlen = len(deck)
+def part1(data: List[Tuple[Action, int]]) -> int:
+    dlen = 10007
+    deck = list(range(dlen))
 
-    for t in techniques:
+    for t in data:
         if t[0] == Action.DEAL_INTO:
             deck.reverse()
 
@@ -36,15 +37,7 @@ def shuffle(deck, techniques):
         else:
             raise Exception(f"Unknown action: {t[0]}")
 
-    return deck
-
-
-def part1(data: List[Tuple[Action, int]]) -> int:
-    deck = list(range(10007))
-
-    result = shuffle(deck, data)
-
-    return result.index(2019)
+    return deck.index(2019)
 
 
 def part2(data: List[Tuple[Action, int]]) -> int:

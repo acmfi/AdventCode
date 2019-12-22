@@ -55,7 +55,7 @@ def part2(data: List[Tuple[Action, int]]) -> int:
     this approach wasn't going to work.
 
     The following approach is ~stolen~ inspired from the following AoC Reddit
-    solution thread comment, I did not had a look to the code, although it was
+    solution thread comment, I did not have a look to the code, although it was
     conveniently coded in Python, since the comment is enough to understand the
     problem and the solution he came with.
 

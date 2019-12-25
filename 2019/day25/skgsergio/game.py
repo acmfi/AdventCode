@@ -204,18 +204,19 @@ def brute(data: List[int], exclude_items: List[str]):
         "north": "south",
         "south": "north",
         "east": "west",
-        "west": "east"
+        "west": "east",
+        "init": "init"
     }
 
     last_line = ""
-    last_door = ""
+    last_door = "init"
     last_inv = []
 
     current_inv = []
     current_inv_refresh = True
 
     eq_inv_count = 0
-    eq_inv_max = 10
+    eq_inv_max = 25
 
     combs = []
     comb_len = 1
@@ -269,9 +270,6 @@ def brute(data: List[int], exclude_items: List[str]):
             elif last_line[:2] == "==":
                 checkpoint = last_line == "== Security Checkpoint ==\n"
 
-                if not checkpoint and eq_inv_count > eq_inv_max:
-                    input("kapasao: ")
-
             elif last_line == "Doors here lead:\n":
                 doors = []
                 reading_doors = True
@@ -311,7 +309,7 @@ def brute(data: List[int], exclude_items: List[str]):
                     current_inv_refresh = True
                     eq_inv_count += current_inv == last_inv
 
-                    command = opposite_door[last_door]
+                    command = last_door = opposite_door[last_door]
 
                 print(f"> {command}")
                 m._inputs = [ord(c) for c in command] + [ord("\n")]
@@ -328,7 +326,13 @@ def brute(data: List[int], exclude_items: List[str]):
                             break
 
                 elif not command and doors:
-                    command = last_door = random.choice(doors)
+                    door = random.choice(doors)
+
+                    if last_door and len(doors) > 1:
+                        while door == opposite_door[last_door]:
+                            door = random.choice(doors)
+
+                    command = last_door = door
 
                 print(f"> {command}")
                 m._inputs = [ord(c) for c in command] + [ord("\n")]

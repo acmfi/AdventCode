@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import sys
 import random
-import itertools
 
-from typing import List, Optional
+from itertools import combinations
+
+from typing import List, Tuple, Optional
 
 
 DEBUG = False
@@ -184,7 +185,7 @@ def run(data: List[int]):
     while True:
         o = m.run()
 
-        if m._eop:
+        if m._eop or o is None:
             break
 
         last_line += chr(o)
@@ -210,35 +211,36 @@ def brute(data: List[int], exclude_items: List[str]):
 
     last_line = ""
     last_door = "init"
-    last_inv = []
+    last_inv: List[str] = []
 
-    current_inv = []
+    current_inv: List[str] = []
     current_inv_refresh = True
 
     eq_inv_count = 0
     eq_inv_max = 25
 
-    combs = []
     comb_len = 1
-    current_comb = []
-    first_drop = True
+    combs: List[Tuple[str, ...]] = []
+    current_comb: Tuple[str, ...] = ()
 
-    doors = []
-    items = []
+    doors: List[str] = []
+    items: List[str] = []
 
     reading_doors = False
     reading_items = False
     reading_inv = False
 
+    first_drop = True
+
     checkpoint = False
 
-    pending_cmds = []
+    pending_cmds: List[str] = []
 
     m = Intcode(data)
     while True:
         o = m.run()
 
-        if m._eop:
+        if m._eop or o is None:
             break
 
         last_line += chr(o)
@@ -295,7 +297,7 @@ def brute(data: List[int], exclude_items: List[str]):
                     elif not combs and not pending_cmds:
                         comb_len += 1
                         assert comb_len < len(current_inv)
-                        combs = list(itertools.combinations(current_inv, comb_len))
+                        combs = list(combinations(current_inv, comb_len))
 
                     if combs and not pending_cmds:
                         pending_cmds = [f"drop {i}" for i in current_comb]
@@ -354,8 +356,6 @@ if __name__ == '__main__':
         run(program)
 
     elif sys.argv[1] == "brute":
-        exclude = []
-
         with open(sys.argv[3], 'r') as f:
             exclude = f.read().splitlines()
 

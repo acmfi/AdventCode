@@ -5,37 +5,34 @@ defmodule Aoc.Aoc2020.Day01.Solve do
     find_2020(input)
   end
 
-  defp find_2020(list, extra \\ 0)
-  defp find_2020([], _), do: 0
-
-  defp find_2020([x | rest], extra) do
-    result =
-      Enum.reduce_while(rest, :not, fn y, _ ->
-        if x + y + extra == 2020 do
-          {:halt, {:ok, x, y, extra}}
-        else
-          {:cont, :not}
-        end
+  defp find_2020(input) do
+    Stream.flat_map(input, fn x ->
+      Stream.map(input, fn y ->
+        {x, y}
       end)
-
-    case result do
-      {:ok, x, y, 0} -> x * y
-      {:ok, x, y, z} -> x * y * z
-      _ -> find_2020(rest, extra)
-    end
+      |> Stream.filter(fn {x, y} -> x + y == 2020 end)
+      |> Stream.map(fn {x, y} -> x * y end)
+    end)
+    |> Enum.take(1)
+    |> Enum.at(0)
   end
 
   def star2(input) do
     find3_2020(input)
   end
 
-  defp find3_2020([]), do: 0
-
-  defp find3_2020([x | rest]) do
-    case find_2020(rest, x) do
-      0 -> find3_2020(rest)
-      result -> result
-    end
+  defp find3_2020(input) do
+    Stream.flat_map(input, fn x ->
+      Stream.flat_map(input, fn y ->
+        Stream.map(input, fn z ->
+          {x, y, z}
+        end)
+        |> Stream.filter(fn {x, y, z} -> x + y + z == 2020 end)
+        |> Stream.map(fn {x, y, z} -> x * y * z end)
+      end)
+    end)
+    |> Enum.take(1)
+    |> Enum.at(0)
   end
 
   defp parse_line(line) do

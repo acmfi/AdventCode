@@ -1,0 +1,32 @@
+use std::fs;
+
+fn star1(pass : &Vec<(usize, usize, char, &str)>) {
+    let valid_pass = pass.iter().filter(|(min, max, c, s)| {
+        let o = s.chars().filter(|x| x == c).count();
+        o <= *max && o >= *min }
+    );
+
+    println!("{}", valid_pass.count())
+}
+
+fn star2(pass : &Vec<(usize, usize, char, &str)>) {
+    let valid_pass = pass.iter().filter(|(min, max, c, s)| {
+        (s.chars().nth(*min-1).unwrap() == *c) ^ (s.chars().nth(*max-1).unwrap() == *c) }
+    );
+
+    println!("{}", valid_pass.count())
+}
+
+fn convert(s : &str) -> (usize, usize, char, &str) {
+    let sp : Vec<&str> = s.split_whitespace().collect();
+    let minmax : Vec<usize> = sp[0].split('-').map(|x| x.parse::<usize>().unwrap()).collect();
+    (minmax[0],minmax[1],sp[1].chars().next().unwrap(),sp[2])
+}
+
+fn main() {
+    let r = fs::read_to_string("input").unwrap();
+    let pass : Vec<(usize, usize, char, &str)> = r.lines().map(|x| convert(x)).collect();
+    
+    star1(&pass);
+    star2(&pass);
+}

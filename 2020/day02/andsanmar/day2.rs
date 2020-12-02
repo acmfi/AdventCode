@@ -1,20 +1,12 @@
 use std::fs;
 
-fn star1(pass : &Vec<(usize, usize, char, &str)>) {
-    let valid_pass = pass.iter().filter(|(min, max, c, s)| {
-        let o = s.chars().filter(|x| x == c).count();
-        o <= *max && o >= *min }
-    );
-
-    println!("{}", valid_pass.count())
+fn star1((min, max, c, s) : (usize, usize, char, &str)) -> bool {
+    let o = s.chars().filter(|x| *x == c).count();
+    o <= max && o >= min
 }
 
-fn star2(pass : &Vec<(usize, usize, char, &str)>) {
-    let valid_pass = pass.iter().filter(|(min, max, c, s)| {
-        (s.chars().nth(*min-1).unwrap() == *c) ^ (s.chars().nth(*max-1).unwrap() == *c) }
-    );
-
-    println!("{}", valid_pass.count())
+fn star2((min, max, c, s) : (usize, usize, char, &str)) -> bool {
+    (s.chars().nth(min-1).unwrap() == c) ^ (s.chars().nth(max-1).unwrap() == c)
 }
 
 fn convert(s : &str) -> (usize, usize, char, &str) {
@@ -26,7 +18,6 @@ fn convert(s : &str) -> (usize, usize, char, &str) {
 fn main() {
     let r = fs::read_to_string("input").unwrap();
     let pass : Vec<(usize, usize, char, &str)> = r.lines().map(|x| convert(x)).collect();
-    
-    star1(&pass);
-    star2(&pass);
+    println!("{}", pass.iter().filter(|t| star1(**t)).count());
+    println!("{}", pass.iter().filter(|t| star2(**t)).count());
 }

@@ -22,7 +22,6 @@ int main() {
       if (pwd[i]==letter) counterLetters++;
     }
     if (counterLetters>=min && counterLetters <= max) counter1st++;
-
     if ((pwd[min-1]==letter) ^ (pwd[max-1]==letter)) counter2nd++;
   }
   fclose(myFile);

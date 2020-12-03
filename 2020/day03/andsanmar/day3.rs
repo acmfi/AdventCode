@@ -1,15 +1,13 @@
 use std::fs;
 
 fn trees_found(forest : &Vec<&str>, down : usize, right : usize) -> usize {
-    let trees = forest.iter().enumerate().filter(
+    forest.iter().enumerate().filter(
         |(num,line)| { num % down == 0 && {
             match line.chars().nth((num/down)*right % (line.len())) {
                 Some('#') => true,
                 _ => false
             }
-        }
-        });
-    trees.count()
+        }}).count()
 }
 
 fn main() {

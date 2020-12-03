@@ -22,5 +22,5 @@ with open("input.txt", "r") as f:
     res = 1
     for x in trees:
         res *= x[0]
-    print("1st STAR SOLUTION =", trees[1])
+    print("1st STAR SOLUTION =", trees[1][0])
     print("2nd STAR SOLUTION =", res)

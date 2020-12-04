@@ -5,10 +5,10 @@ fn main() {
     let passports : Vec<Vec<(&str, &str)>> = r.split("\n\n").map(|x| x.split_whitespace().map(|f| {let v = f.split(":").collect::<Vec<_>>(); (v[0], v[1])}).collect()).collect();
 
     let fields = vec!["byr","iyr","eyr","hgt","hcl","ecl","pid"]; // cid is optional
-    let present_passports = passports.iter().filter(|p| fields.iter().all(|f| p.iter().any(|e| &e.0 == f)));
-    // println!("{}", &present_passports.count());
+    let present_passports : Vec<&Vec<(&str, &str)>> = passports.iter().filter(|p| fields.iter().all(|f| p.iter().any(|e| &e.0 == f))).collect();
+    println!("{}", present_passports.len());
 
-    let valid_passports = present_passports.filter(|p| {
+    let valid_passports = present_passports.iter().filter(|p| {
         p.iter().all ( |field| {
             match field.0 {
                 "byr" => match field.1.parse::<u16>() { Ok(y) => y >= 1920 && y <= 2002, _ => false },

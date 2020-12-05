@@ -1,6 +1,4 @@
-from string import hexdigits
-
-
+hexdigits = "0123456789abcdef"
 req_fields = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid']
 
 
@@ -8,16 +6,15 @@ def passports():
     with open('day04.input', 'r') as f:
         passport = {}
         while (l := f.readline()) != '':
-            l = l.replace('\n', '')
+            l = l.strip('\n')   # Bad old habits need to be changed sometime.
             if l != '':
-                l = l.split(' ')
-                l = [field.split(':') for field in l]
+                l = [field.split(':') for field in l.split(' ')]
                 for field in l:
                     passport[field[0]] = field[1]
             else:
                 yield passport
                 passport = {}   # I didn't know you could have shit AFTER 'yield' but you can.
-        yield passport
+        yield passport          # Last passport.
 
 
 def print_passport(print_passport):
@@ -44,7 +41,7 @@ star2_functions = {'byr': lambda x : int(x) in range(1920, 2003),
                    'iyr': lambda x : int(x) in range(2010, 2021),
                    'eyr': lambda x : int(x) in range(2020, 2031),
                    'hgt': lambda x : int(x[0]) in range(x[1], x[2]),
-                   'hcl': lambda x : all(c in hexdigits[:-6] for c in x),
+                   'hcl': lambda x : all(c in hexdigits for c in x),
                    'ecl': lambda x : x in ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'],
                    'pid': lambda x : all(int(i) in range(0, 10) for i in x)
                    }

@@ -4,15 +4,23 @@
 #include <string>
 #include <cmath>
 #include <algorithm>
+#include <omp.h>
 
 int readInput(std::ifstream *myFile, std::vector<std::string> *passes);
 
+
+/*
+ * TODO: FIX THE RESULT OF THE 1ST STAR -> reduction doesnt work properly
+ */
 int main(int argc, char **argv) {
 
   std::ifstream myFile;
   std::vector<std::string> passes;
   std::vector<int> idList;
-  int maxID = 0;
+  std::string seat;
+  size_t i, x, numSteps;
+  int maxR, minR, maxC, minC;
+  int maxID;
 
   if (argc != 2) {
     std::cout << "Use: day05 input.txt" << "\n";
@@ -26,19 +34,18 @@ int main(int argc, char **argv) {
   }
   myFile.close();
 
+  numSteps = passes.size();
 
-  for(size_t i = 0; i < passes.size(); i++) {
-    int ID;
-    int minR = 0, maxR = 127;
-    int minC = 0, maxC = 8;
-    size_t x;
-    std::string seat = passes[i];
+#pragma omp parallel for shared(std::cout, passes, idList, numSteps) private(x, seat, maxR, minR, maxC, minC) lastprivate(i) reduction(max:maxID) default(none)
+  for(i = 0; i < numSteps; i++) {
+    minR = 0, maxR = 127;
+    minC = 0, maxC = 8;
+    seat = passes[i];
 
     for(x = 0; x < seat.length()-3; x++) {
       switch(seat[x]) {
       case 'F': maxR -= (maxR-minR+1)/2;break;
       case 'B': minR += (maxR-minR+1)/2; break;
-      default:  std::cout << "Wrong code on the seat '" << seat << "'\n";
       }
     }
 
@@ -46,14 +53,15 @@ int main(int argc, char **argv) {
       switch(seat[x]) {
       case 'L': maxC -= (maxC-minC)/2; break;
       case 'R': minC += (maxC-minC)/2; break;
-      default:  std::cout << "Wrong code on the seat '" << seat << "'\n";
       }
     }
-    idList.push_back(ID = (minR*8+minC));
-    if (maxID < ID) {
-      maxID = ID;
-    }
+    maxID = (minR*8+minC);
+#pragma omp critical (printID)
+    std::cout << "seat ID: " << maxID << "\n";
+#pragma omp critical (list_update)
+    idList.push_back(maxID);
   }
+
   std::cout << "1st STAR SOLUTION -> " << maxID << "\n";
   std::sort(idList.begin(), idList.end());
 
@@ -63,7 +71,6 @@ int main(int argc, char **argv) {
       break;
     }
   }
-
   return 0;
 }
 

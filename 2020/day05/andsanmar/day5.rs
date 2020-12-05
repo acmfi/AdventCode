@@ -10,9 +10,10 @@ fn main() {
     }).collect();
     passes_ids.sort();
     println!("{:?}", passes_ids.iter().last());
-    for x in passes_ids[0].. {
-        if ! passes_ids.contains(&x) {
-            println!("{:?}", x);
+    let c = passes_ids[0];
+    for (x, n) in passes_ids.iter().enumerate() {
+        if n - x as u16 != c {
+            println!("{:?}", n-1); // The previous entry was missing
             break
         }
     }

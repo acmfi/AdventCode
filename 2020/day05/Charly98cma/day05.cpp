@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <algorithm>
 
 int readInput(std::ifstream *myFile, std::vector<std::string> *passes);
 
@@ -12,6 +13,7 @@ int main(int argc, char **argv) {
   std::vector<std::string> passes;
   std::vector<int> idList;
   int maxID = 0;
+
   if (argc != 2) {
     std::cout << "Use: day05 input.txt" << "\n";
     return 1;
@@ -47,13 +49,21 @@ int main(int argc, char **argv) {
       default:  std::cout << "Wrong code on the seat '" << seat << "'\n";
       }
     }
-    ID = (minR*8+minC);
-    std::cout << seat << ": row " << minR << ", column " << minC  << ", seat ID " << ID << "\n";
+    idList.push_back(ID = (minR*8+minC));
     if (maxID < ID) {
       maxID = ID;
     }
   }
-  std::cout << "\n" << "-- Highest ID -> " << maxID << " --\n";
+  std::cout << "1st STAR SOLUTION -> " << maxID << "\n";
+  std::sort(idList.begin(), idList.end());
+
+  for(size_t i = 0; i < idList.size(); i++) {
+    if (idList[i]+1 != idList[i+1]) {
+      std::cout << "2nd STAR SOLUTION -> " << idList[i]+1 << "\n";
+      break;
+    }
+  }
+
   return 0;
 }
 

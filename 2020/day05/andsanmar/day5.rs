@@ -9,7 +9,7 @@ fn main() {
         }).collect::<String>().as_str(), 2).unwrap()
     }).collect();
     passes_ids.sort();
-    println!("{:?}", passes_ids.iter().last());
+    println!("{:?}", passes_ids.last());
     let c = passes_ids[0];
     for (x, n) in passes_ids.iter().enumerate() {
         if n - x as u16 != c {

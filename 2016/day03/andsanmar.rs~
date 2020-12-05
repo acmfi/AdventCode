@@ -1,0 +1,11 @@
+use std::fs;
+
+fn main() {
+    let r = fs::read_to_string("input").unwrap();
+    let valid_triangles : Vec<(u16,u16,u16)> = r.lines().map(|l| {
+        let mut t : Vec<u16> = l.split_whitespace().map(|n| n.parse::<u16>().unwrap()).collect();
+        t.sort();
+        (t[0], t[1], t[2])
+    }).collect();
+    println!("{}", valid_triangles.len());
+}

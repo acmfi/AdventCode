@@ -11,15 +11,9 @@ fn main() {
     println!("{}", all_questions.map(|x| x.len()).sum::<usize>());
     let questions_common = r.split("\n\n").map( |x| {
         let q : Vec<Vec<char>> = x.lines().map(|x| x.chars().collect()).collect();
-        q.iter().fold( q.first().unwrap().to_vec(), |all_answered, lq| {
-            let mut intersection = vec![];
-            for e in lq {
-                if all_answered.contains(&e) {
-                    intersection.push(*e);
-                }
-            }
-            intersection
-        })
+        q.iter().fold(q.first().unwrap().to_vec(), |all_answered, lq| // Compute vecs intersection
+                      lq.iter().filter(|e| all_answered.contains(e)).map(|x| *x).collect::<Vec<char>>()
+        )
     });
     println!("{}", questions_common.map(|x| x.len()).sum::<usize>());
 }

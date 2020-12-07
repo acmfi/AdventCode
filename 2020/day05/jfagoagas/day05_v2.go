@@ -3,41 +3,20 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 func main() {
 	input := readLines(os.Args[1])
 	var seats []int
-	for index := range input {
-		rowMax := 128
-		rowMin := 0
-		rows := input[index][:7]
-		columnMax := 8
-		columnMin := 0
-		columns := input[index][7:]
-		for i := 0; i < len(rows); i++ {
-			value := string(rows[i])
-			if value == "F" {
-				rowMax = rowMax - ((rowMax / 2) - (rowMin / 2))
-			}
-			if value == "B" {
-				rowMin = rowMin + ((rowMax / 2) - (rowMin / 2))
-			}
-		}
-		for i := 0; i < len(columns); i++ {
-			value := string(columns[i])
-			if value == "L" {
-				columnMax = columnMax - ((columnMax / 2) - (columnMin / 2))
-			}
-			if value == "R" {
-				columnMin = columnMin + ((columnMax / 2) - (columnMin / 2))
-			}
-		}
-		row := math.Min(float64(rowMax), float64(rowMin))
-		column := math.Min(float64(columnMax), float64(columnMin))
+	for _, entry := range input {
+		replacer := strings.NewReplacer("F", "0", "B", "1", "L", "0", "R", "1")
+		value := replacer.Replace(string(entry))
+		row, _ := strconv.ParseInt(value[:7], 2, 64)
+		column, _ := strconv.ParseInt(value[7:], 2, 64)
 		seatID := int((row * 8) + column)
 		seats = append(seats, seatID)
 	}

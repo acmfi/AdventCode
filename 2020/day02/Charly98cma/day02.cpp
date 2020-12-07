@@ -10,6 +10,7 @@ int main() {
 
   if (!(myFile = fopen("input.txt", "r"))) {
     printf("File missing!");
+    return 1;
   }
 
   counter1st = 0;
@@ -21,8 +22,8 @@ int main() {
       if (pwd[i]=='\0') break;
       if (pwd[i]==letter) counterLetters++;
     }
-    if (counterLetters>=min && counterLetters <= max) counter1st++;
-    if ((pwd[min-1]==letter) ^ (pwd[max-1]==letter)) counter2nd++;
+    if (counterLetters >= min && counterLetters <= max)  counter1st++;
+    if ((pwd[min-1] == letter) ^ (pwd[max-1] == letter)) counter2nd++;
   }
   fclose(myFile);
 

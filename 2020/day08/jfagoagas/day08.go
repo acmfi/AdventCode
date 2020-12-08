@@ -16,17 +16,52 @@ type instructionSet struct {
 }
 
 func main() {
-
 	file, _ := ioutil.ReadFile(os.Args[1])
 	input := strings.Split((string(file)), "\n")
 
-	fmt.Printf("Day 8\nPart 1: Accumulator = %d\n", checkLoop(input))
+	// Part 1
+	_, accumulator1 := checkLoop(input)
+	// Part 2
+	accumulator2 := changeJMPNOP(input)
+	fmt.Printf("Day 8\nPart 1: Accumulator = %d\nPart 2: Accumulator = %d\n", accumulator1, accumulator2)
 }
+func changeJMPNOP(input []string) int {
+	// Part 2
+	var testCode [][]string
+	testCode = append(testCode, input)
+	for index := range input {
+		instruction := strings.Split(input[index], " ")
+		operation := instruction[0]
+		argument := instruction[1]
 
-func checkLoop(input []string) int {
+		if operation == "nop" {
+			tmp := make([]string, len(input))
+			copy(tmp, input)
+			tmp[index] = "jmp " + argument
+			testCode = append(testCode, tmp)
+		}
+		if operation == "jmp" {
+			tmp := make([]string, len(input))
+			copy(tmp, input)
+			tmp[index] = "nop " + argument
+			testCode = append(testCode, tmp)
+		}
+	}
+	var accumulator2 int
+	for i := range testCode {
+		infiniteLoop, accumulator := checkLoop(testCode[i])
+		if !infiniteLoop {
+			accumulator2 = accumulator
+			break
+		}
+	}
+	return accumulator2
+}
+func checkLoop(input []string) (bool, int) {
 	// bootCode contains as key the instruction index and their values as keys
 	bootCode := make(map[int]instructionSet)
 	accumulator := 0
+	infiniteLoop := false
 	for index := 0; index < len(input); index++ {
 		// Instruction elements
 		instruction := strings.Split(input[index], " ")
@@ -70,8 +105,10 @@ func checkLoop(input []string) int {
 			ins.executed = true
 			bootCode[index] = ins
 		} else {
+			infiniteLoop = true
+			//fmt.Println("infiniteLoop", accumulator)
 			break
 		}
 	}
-	return accumulator
+	return infiniteLoop, accumulator
 }

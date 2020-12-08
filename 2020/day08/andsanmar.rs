@@ -15,15 +15,16 @@ fn inf_loop(instructions : &Vec<Ins>, index : usize, acc : i32, executed : &mut 
         }
 }
 
+// executed will be modified in the inner executions, but it doesn't matter because when braking the loop a never reached instruction will be reached
 fn solve_loop(instructions : &Vec<Ins>, index : usize, acc : i32, executed : &mut Vec<usize>) -> i32 {
     match instructions[index] {
-        Ins::Nop(n) => {
-            let (r, end) = inf_loop(instructions, index+n as usize, acc, executed);
-            if end { r } else {solve_loop(instructions, index+1, acc, executed)}
-        },  
-        Ins::Jmp(n) => {
-            let (r, end) = inf_loop(instructions, index+1, acc, executed);
-            if end { r } else {solve_loop(instructions, index+n as usize, acc, executed)}
+        Ins::Nop(n) => match inf_loop(instructions, index+n as usize, acc, executed) {
+            (acc, true) => acc,
+            _ => solve_loop(instructions, index+1, acc, executed)
+        },
+        Ins::Jmp(n) => match inf_loop(instructions, index+1, acc, executed) {
+            (acc, true) => acc,
+            _ => solve_loop(instructions, index+n as usize, acc, executed)
         },
         Ins::Acc(n) => solve_loop(instructions, index+1, acc+n as i32, executed),
     }

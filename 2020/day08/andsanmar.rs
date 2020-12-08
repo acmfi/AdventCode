@@ -6,7 +6,7 @@ enum Ins {
     Jmp(isize)
 }
 
-fn inf_loop(instructions : &Vec<Ins>, index : usize, acc : isize, executed : &mut Vec<usize>) -> (i32, bool) {
+fn inf_loop(instructions : &Vec<Ins>, index : usize, acc : isize, executed : &mut Vec<usize>) -> (isize, bool) {
     if index == instructions.len() { (acc, true) } else 
         if executed.contains(&index) { (acc, false) } else {
             executed.push(index);
@@ -19,7 +19,7 @@ fn inf_loop(instructions : &Vec<Ins>, index : usize, acc : isize, executed : &mu
 }
 
 // executed will be modified in the inner executions, but it doesn't matter because when braking the loop a never reached instruction will be reached
-fn solve_loop(instructions : &Vec<Ins>, index : usize, acc : isize, executed : &mut Vec<usize>) -> i32 {
+fn solve_loop(instructions : &Vec<Ins>, index : usize, acc : isize, executed : &mut Vec<usize>) -> isize {
     match instructions[index] {
         Ins::Nop(n) => match inf_loop(instructions, index+n as usize, acc, executed) {
             (acc, true) => acc,

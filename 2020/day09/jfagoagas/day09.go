@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -18,6 +19,7 @@ func main() {
 	}
 	// Preamble subslice
 	preamble := input[:25]
+	// Part 1
 	var init, part1 int
 	for i := len(preamble); i < len(input); i++ {
 		//fmt.Println("Number: ", input[i])
@@ -28,10 +30,37 @@ func main() {
 		}
 		init++
 	}
-
-	fmt.Printf("Day 9\nPart 1: %d\n", part1)
+	// Part 2
+	contiguous := contiguousSum(input, part1)
+	sort.Ints(contiguous)
+	//fmt.Println(contiguous)
+	part2 := contiguous[0] + contiguous[len(contiguous)-1]
+	fmt.Printf("Day 9\nPart 1: %d\nPart 2: %d\n", part1, part2)
 }
 
+func sumSlice(input []int) (sum int) {
+	for _, value := range input {
+		sum += value
+	}
+	return
+}
+
+func contiguousSum(input []int, target int) (result []int) {
+	j := 0
+	for i := 0; i < len(input); i++ {
+		result = append(result, input[i])
+		if sumSlice(result) == target {
+			break
+		} else if sumSlice(result) > target {
+			// Move to the next item in input
+			j++
+			i = j
+			// Empty result slice
+			result = nil
+		}
+	}
+	return
+}
 func twoSum(numbers []int, target int) (result int) {
 	if len(numbers) == 1 {
 		return 0

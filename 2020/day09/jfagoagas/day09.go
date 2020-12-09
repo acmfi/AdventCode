@@ -33,7 +33,6 @@ func main() {
 	// Part 2
 	contiguous := contiguousSum(input, part1)
 	sort.Ints(contiguous)
-	//fmt.Println(contiguous)
 	part2 := contiguous[0] + contiguous[len(contiguous)-1]
 	fmt.Printf("Day 9\nPart 1: %d\nPart 2: %d\n", part1, part2)
 }
@@ -61,6 +60,7 @@ func contiguousSum(input []int, target int) (result []int) {
 	}
 	return
 }
+
 func twoSum(numbers []int, target int) (result int) {
 	if len(numbers) == 1 {
 		return 0

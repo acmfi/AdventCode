@@ -5,15 +5,16 @@ fn is_sum_of(r : usize, prev : &[usize]) -> bool {
 }
 
 fn find_summing(r : usize, nums : &Vec<usize>) -> usize {
-    let mut v : Vec<usize> = Vec::new();
     let mut adding = 0;
-    for x in 0..nums.len() {
-        v.push(nums[x]);
-        adding += nums[x];
+    let mut min = 0;
+    for max in 0..nums.len() {
+        adding += nums[max];
         while adding > r {
-            adding -= v.remove(0);
+            adding -= nums[min];
+            min += 1;
         }
         if adding == r {
+            let v : Vec<usize> = nums[min..max+1].to_vec();
             let min = v.iter().min().unwrap();
             let max = v.iter().max().unwrap();
             return min+max;

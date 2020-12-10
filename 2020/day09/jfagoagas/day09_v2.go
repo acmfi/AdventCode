@@ -45,17 +45,16 @@ func sumSlice(input []int) (sum int) {
 }
 
 func contiguousSum(input []int, target int) (result []int) {
-	j := 0
 	for i := 0; i < len(input); i++ {
-		result = append(result, input[i])
-		if sumSlice(result) == target {
+		sumResult := sumSlice(result)
+		//fmt.Println(input[i], result, sumResult)
+		if sumResult == target {
 			break
-		} else if sumSlice(result) > target {
-			// Move to the next item in input
-			j++
-			i = j
-			// Empty result slice
-			result = nil
+		} else if sumResult > target {
+			result = result[1:]
+			i--
+		} else {
+			result = append(result, input[i])
 		}
 	}
 	return

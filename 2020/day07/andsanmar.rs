@@ -32,16 +32,13 @@ fn main() {
          d.next().unwrap().split(",").map(|s| {
              let defined = s.trim().split_whitespace().collect::<Vec<&str>>();
              let (n, b) = defined.split_first().unwrap();
-             ( match n {
-                 &"no" => 0,
-                 _ => n.parse::<usize>().unwrap()
-             }, transform(b.to_vec()))
+             ( match n { &"no" => 0, _ => n.parse::<usize>().unwrap() }, transform(b.to_vec()) )
          }).collect::<Vec<(usize,String)>>())
     }).collect();
     for (source,contained) in &parsed {
         for (_n,bag) in contained {
-            contained_by.entry(bag).or_default().push(&source)}
-        contains.insert(&source, contained);
+            contained_by.entry(bag).or_default().push(source)}
+        contains.insert(source, contained);
     }
     let mut star1 = search_contained(&shiny_gold, &contained_by);
     star1.sort(); star1.dedup(); // We leave the unique elements

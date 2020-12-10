@@ -18,6 +18,7 @@ func main() {
 		input = append(input, item)
 	}
 
+	// Part 1
 	sort.Ints(input)
 	chargingOutlet := 0
 
@@ -37,5 +38,13 @@ func main() {
 		//fmt.Printf("Joltage Differences -- Charging Outlet: %d -- Adapter: %d -- Difference: %d\n", chargingOutlet, value, difference)
 		chargingOutlet = value
 	}
-	fmt.Printf("Day 10\nPart1: %d\n", difference1*difference3)
+
+	// Part 2
+	accumulator := map[int]int{0: 1}
+	for _, value := range input {
+		//fmt.Println(value, accumulator[value-1], accumulator[value-2], accumulator[value-3])
+		accumulator[value] = accumulator[value-1] + accumulator[value-2] + accumulator[value-3]
+	}
+
+	fmt.Printf("Day 10\nPart 1: %d\nPart 2: %d\n", difference1*difference3, accumulator[input[len(input)-1]])
 }

@@ -24,8 +24,10 @@ fn seat_people_2<'a>(seats : &Vec<Vec<&'a Seat>>) -> Vec<Vec<&'a Seat>> {
         (0..seats[x].len()).map(|y| {
             let c : usize = [|x,y,a|(x+a,y),|x,y,a|(x+a,y+a),|x,y,a|(x+a,y-a),|x,y,a|(x-a,y-a),
                              |x,y,a|(x-a,y),|x,y,a|(x-a,y+a),|x,y,a|(x,y-a),|x,y,a|(x,y+a)].iter().fold(
-                0, |acc,fun| { for a in 1.. { match get_seat(fun(x,y,a)) {
-                    Some(&&Seat::Floor) => {}, Some(&&Seat::Occupied) => return acc + 1, _ => return acc}} acc });
+                0, |acc,fun| {
+                    struct Rec<'b> { f: &'b dyn Fn(usize, &Rec<'b>) -> usize }
+                    let next_seat = Rec { f : &|a,next_seat|  match get_seat(fun(x,y,a)) { Some(&&Seat::Floor) => (next_seat.f)(a+1,next_seat), Some(&&Seat::Occupied) => acc + 1, _ => acc} };
+                    (next_seat.f)(1,&next_seat)});
             match seats[x][y] {
                 Seat::Empty if c == 0 => &Seat::Occupied,
                 Seat::Occupied if c >= 5 => &Seat::Empty,

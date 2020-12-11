@@ -26,28 +26,28 @@ def checkInvalidValues(passport, field):
         return passport[field] in reqFields[field]
     if field == "pid":
         return re.match(r'(^[0-9]{9}$)', passport[field]) != None
+    return False
 
-with open("input.txt", "r") as f:
-    passport = dict()
-    numValid = 0
-    invalid = False
-    for l in f:
-        l = l.strip()
-        if not l: # Empty lines (check passport)
-            for field in reqFields:
-                if field not in passport or not checkInvalidValues(passport, field):
-                    invalid = True
-                    break
-            if not invalid:
-                numValid += 1
-            # Reset the passport data
-            passport = dict()
-            # Reset the invalid flag
-            invalid = False
-        else: # Not empty lines (keep reading fields)
-            l = re.split(r'[:| ]', l)
-            it = iter(l)
-            for key in it:
-                passport[key] = next(it)
+
+passport = dict()
+numValid = 0
+invalid = False
+for l in open("input.txt", "r"):
+    l = l.strip()
+    if not l: # Empty lines (check passport)
+        for field in reqFields:
+            if field not in passport or not checkInvalidValues(passport, field):
+                invalid = True
+                break
+        if not invalid:
+            numValid += 1
+        # Reset the passport data
+        passport = dict()
+        # Reset the invalid flag
+        invalid = False
+    else: # Not empty lines (keep reading fields)
+        it = iter(re.split(r'[:| ]', l))
+        for key in it:
+            passport[key] = next(it)
 
 print("2nd STAR SOLUTION",numValid)

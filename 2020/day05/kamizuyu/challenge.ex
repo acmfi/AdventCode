@@ -1,6 +1,6 @@
 defmodule AdventOfCode.Year2020.Day5.Challenge do
   @moduledoc """
-  Impl day 4 of year 2020 advent of code
+  Impl day 5 of year 2020 advent of code
   """
 
   @path "test/fixtures/2020/day5/"

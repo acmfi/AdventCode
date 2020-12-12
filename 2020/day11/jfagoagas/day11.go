@@ -35,9 +35,7 @@ func main() {
 	seatsOccupiedPreviously := 0
 	for {
 		var matrix2 [][]string
-		//matrix2 := make([][]string, rowLength)
 		for i := 0; i < rowLength; i++ {
-			//row2 = nil
 			var row2 []string
 			for j := 0; j < columnLength; j++ {
 				//row := matrix1[i]
@@ -89,7 +87,6 @@ func main() {
 		}
 
 		if seatsOccupied == seatsOccupiedPreviously {
-			//fmt.Println(seatsOccupied)
 			break
 		}
 		/*

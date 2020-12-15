@@ -25,8 +25,8 @@ func main() {
 	accumulator2 := changeJMPNOP(input)
 	fmt.Printf("Day 8\nPart 1: Accumulator = %d\nPart 2: Accumulator = %d\n", accumulator1, accumulator2)
 }
+
 func changeJMPNOP(input []string) int {
-	// Part 2
 	var testCode [][]string
 	testCode = append(testCode, input)
 	for index := range input {
@@ -57,6 +57,7 @@ func changeJMPNOP(input []string) int {
 	}
 	return accumulator2
 }
+
 func checkLoop(input []string) (bool, int) {
 	// bootCode contains as key the instruction index and their values as keys
 	bootCode := make(map[int]instructionSet)

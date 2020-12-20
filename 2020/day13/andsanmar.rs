@@ -6,9 +6,9 @@ fn first_max(min: usize, current: usize, step: &usize) -> usize {
 
 fn get_min_timestamp(ids  : Vec<(usize, usize)>) -> usize {
     let mut timestamp = 0;
-    let mut inc = ids[0].1;
+    let mut inc = 1;
     // CRT
-    for (i,id) in ids[1..].to_vec() {
+    for (i,id) in ids {
         while (timestamp + i) % id != 0 {
             timestamp += inc;
         }

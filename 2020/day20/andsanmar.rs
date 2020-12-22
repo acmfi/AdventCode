@@ -87,7 +87,6 @@ fn reconstruct_image(ids : &Vec<usize>, edges_matches : HashMap<usize,(usize,boo
                 image_ids[x][y] = Some(next_tile);
             }
         }
-        println!("{:?}", image_ids[x]);
     }
     // 2nd step, place the tiles correctly flipped & rotated
     let mut image_tiles : Vec<Vec<Option<&Tile>>> = vec![vec![None;dimension];dimension];
@@ -124,19 +123,16 @@ fn reconstruct_image(ids : &Vec<usize>, edges_matches : HashMap<usize,(usize,boo
 
 fn find_pattern(image : &mut Tile) {
     let pattern = [(0,18),(1,0),(1,5),(1,6),(1,11),(1,12),(1,17),(1,18),(1,19),(2,1),(2,4),(2,7),(2,10),(2,13),(2,16)];
-    let mut count = 0;
+    let mut found = false;
     for x in 0..image.len()-2 {
         for y in 0..image[x].len()-19 {
-            // println!("({},{}) {:?}",x,y,r);
             if pattern.iter().all(|(x1,y1)| image[x+x1][y+y1]) {
-                count += 1;
+                found = true;
                 for (x1,y1) in pattern.iter() { image[x+x1][y+y1] = false }
             }
         }
     }
-    if count > 0 {
-        // print_tile(image);
-        // println!("{}",count);
+    if found {
         println!("{}", image.iter().flatten().filter(|x| **x).count());
     }
 }

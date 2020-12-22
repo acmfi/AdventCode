@@ -35,7 +35,7 @@ fn main () {
             "\"a\"" => Rule::Lit(true),
             "\"b\"" => Rule::Lit(false),
             chain => Rule::Chain({
-                chain.split(' ').collect::<Vec<&str>>().split(|n| n == &"|").map(|e| e.iter().map(|n| n.parse::<usize>().unwrap()).collect::<Vec<usize>>()).collect()
+                chain.split_whitespace().collect::<Vec<&str>>().split(|n| n == &"|").map(|e| e.iter().map(|n| n.parse::<usize>().unwrap()).collect::<Vec<usize>>()).collect()
             }),
         };
         (rule_n, rule_def)

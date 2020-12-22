@@ -104,21 +104,22 @@ fn reconstruct_image(ids : &Vec<usize>, edges_matches : HashMap<usize,(usize,boo
     };    
     // 3rd step, remove the borders of the tiles to form the image
     // fn remove_border(t : &Tile) -> Tile {t}
-    let image_div : Vec<Tile> = image_tiles.iter().map(|r| {
-        let without_borders : Vec<Tile> = r.iter().map(|t| t.unwrap().split_first().unwrap().1.split_last().unwrap().1.iter().map(|r| r.split_first().unwrap().1.split_last().unwrap().1.to_vec()).collect::<Tile>()).collect();
-        let (f, rest) = without_borders.split_first().unwrap();
-        let mut merged = f.clone();
+    let mut image_div : Vec<Tile> = image_tiles.iter().map(|r| {
+        let mut without_borders : Vec<Tile> = r.iter().map(|t| t.unwrap().split_first().unwrap().1.split_last().unwrap().1.iter().map(|r| r.split_first().unwrap().1.split_last().unwrap().1.to_vec()).collect::<Tile>()).collect();
+        let (merged, rest) = without_borders.split_first_mut().unwrap();
         for el in rest {
             for x in 0..merged.len() {
-                merged[x].append(&mut el[x].clone());
+                merged[x].append(&mut el[x]);
             }
         }
-        merged.clone()
+        merged.to_vec()
     }).collect();
 
-    let mut image : Tile = Vec::new();
-    for x in image_div { image.append(&mut x.clone()) }
-    image
+    let (image, rest) = image_div.split_first_mut().unwrap();
+    for x in 0..rest.len() {
+        image.append(&mut rest[x]);
+    }    
+    image.to_vec()
 }
 
 fn find_pattern(image : &mut Tile) {
@@ -166,5 +167,5 @@ fn main () {
     let corners = adjs.iter().filter(|(_,n)| n == &2).map(|(id,_)| id);
     println!("{:?}", corners.product::<usize>());
     let image = reconstruct_image(&ids, m, tiles.as_slice());
-    for t in obtain_transformations(image).iter().flatten() {find_pattern(&mut t.clone());}
+    for t in obtain_transformations(image).iter().flatten() {find_pattern(&mut t.to_vec());}
 }

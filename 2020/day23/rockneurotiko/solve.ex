@@ -10,19 +10,23 @@ defmodule Aoc.Aoc2020.Day23.Solve do
 
     def next({[x | l], r}), do: {l, [x | r]}
 
-    def prev({l, []}), do: prev({[], Enum.reverse(l)})
-    def prev({l, [x | r]}), do: {[x | l], r}
-
     def pop({[], r}), do: pop({Enum.reverse(r), []})
     def pop({[x | l], r}), do: {x, {l, r}}
 
-    def insert_many({l, r}, vs), do: {vs ++ l, r}
+    def insert_many_at({[], r}, n, vs) do
+      insert_many_at({Enum.reverse(r), []}, n, vs)
+    end
 
-    def value({[], []}), do: nil
+    def insert_many_at({[n | l], r}, n, vs), do: {[n | vs] ++ l, r}
+
+    def insert_many_at({[nn | l], r}, n, vs) do
+      {nl, nr} = insert_many_at({l, r}, n, vs)
+      {[nn | nl], nr}
+    end
 
     def value({[], r}), do: value({Enum.reverse(r), []})
 
-    def value({[x | _], _r}), do: x
+    def value({[x | _], _r} = zip), do: {x, zip}
 
     def to_list({l, r}), do: l ++ Enum.reverse(r)
   end
@@ -54,7 +58,7 @@ defmodule Aoc.Aoc2020.Day23.Solve do
   end
 
   defp play_round(cups, max) do
-    current = Zip.value(cups)
+    {current, cups} = Zip.value(cups)
 
     cups = Zip.next(cups)
 
@@ -68,17 +72,7 @@ defmodule Aoc.Aoc2020.Day23.Solve do
 
     next_n = select_next(current - 1, ps, max)
 
-    insert_at(cups, next_n, ps)
-  end
-
-  defp insert_at(cups, next_n, ps) do
-    case Zip.value(cups) == next_n do
-      true ->
-        cups |> Zip.next() |> Zip.insert_many(ps) |> Zip.prev()
-
-      _ ->
-        cups |> Zip.next() |> insert_at(next_n, ps) |> Zip.prev()
-    end
+    Zip.insert_many_at(cups, next_n, ps)
   end
 
   defp select_next(c, picks, max) when c < 1, do: select_next(max, picks, max)

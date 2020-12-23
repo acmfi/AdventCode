@@ -2,6 +2,8 @@ use std::fs;
 
 type Tile = Vec<Vec<bool>>;
 
+const PATTERN : [(usize,usize);15] = [(0,18),(1,0),(1,5),(1,6),(1,11),(1,12),(1,17),(1,18),(1,19),(2,1),(2,4),(2,7),(2,10),(2,13),(2,16)];
+
 // fn print_tile(tile: &Tile) { for x in tile {println!("{}", x.iter().map(|c| if *c {'#'} else {'.'}).collect::<String>())} }
 
 fn rotate_left(tile: &Tile, dimension : usize) -> Tile {
@@ -16,6 +18,7 @@ fn flip_upside_down(tile: &Tile, dimension: usize) -> Tile {
     }).collect()
 }
 
+// TODO merge the image reconstruction with the matches search
 fn matches(tiles : &[(usize,[Tile;8])]) -> Vec<usize> {
     let mut matched : Vec<usize> = Vec::new();
     match tiles.split_first() {
@@ -61,8 +64,8 @@ fn reconstruct_image(ids : &Vec<usize>, matches_id : &Vec<usize>, tiles: &[(usiz
     // 1st step, place the ids to satisfy the adjacency constraints
     // `image_ids` could be defined with slices, but their dimension is not dynamic
     let mut image_ids : Vec<Vec<Option<usize>>> = vec![vec![None;dimension];dimension];
-    let first_corner : &(usize,Vec<usize>) = adjacencies.iter().find(|(_id,adjacents)| adjacents.len() == 2).unwrap();
-    image_ids[0][0] = Some(first_corner.0);
+    let corner1_id : usize = adjacencies.iter().find(|(_id,adjacents)| adjacents.len() == 2).unwrap().0;
+    image_ids[0][0] = Some(corner1_id);
     for x in 0..dimension {
         for y in 0..dimension {
             if image_ids[x][y] == None {
@@ -81,14 +84,14 @@ fn reconstruct_image(ids : &Vec<usize>, matches_id : &Vec<usize>, tiles: &[(usiz
                         None => true,
                         Some(id_n) => adjs.contains(id_n)
                     }
-                } && adjs.len() == adjacent.len() && image_ids.iter().all(|row| !row.contains(&Some(*id))))).unwrap().0;
+                } && adjs.len() == adjacent.len() && !image_ids.iter().flatten().collect::<Vec<&Option<usize>>>().contains(&&Some(*id)))).unwrap().0;
                 image_ids[x][y] = Some(next_tile);
             }
         }
     }
     // 2nd step, place the tiles correctly flipped & rotated
     let mut image_tiles : Vec<Vec<Option<&Tile>>> = vec![vec![None;dimension];dimension];
-    image_tiles[0][0] = Some(&tiles.iter().find(|(t_id,_)| t_id == &image_ids[0][0].unwrap()).unwrap().1[0]); // FIXME selection of the first tile (it may not be oriented)
+    image_tiles[0][0] = Some(&tiles.iter().find(|(t_id,_)| t_id == &image_ids[0][0].unwrap()).unwrap().1[0]); // FIXME selection of the first tile (it may not be oriented), if not the program will fail finding the adjacent tile
     for x in 0..dimension {
         for y in 0..dimension {
             if image_tiles[x][y] == None {
@@ -121,13 +124,12 @@ fn reconstruct_image(ids : &Vec<usize>, matches_id : &Vec<usize>, tiles: &[(usiz
 }
 
 fn find_pattern(image : &mut Tile) {
-    let pattern = [(0,18),(1,0),(1,5),(1,6),(1,11),(1,12),(1,17),(1,18),(1,19),(2,1),(2,4),(2,7),(2,10),(2,13),(2,16)];
     let mut found = false;
     for x in 0..image.len()-2 {
         for y in 0..image[x].len()-19 {
-            if pattern.iter().all(|(x1,y1)| image[x+x1][y+y1]) {
+            if PATTERN.iter().all(|(x1,y1)| image[x+x1][y+y1]) {
                 found = true;
-                for (x1,y1) in pattern.iter() { image[x+x1][y+y1] = false }
+                for (x1,y1) in PATTERN.iter() { image[x+x1][y+y1] = false }
             }
         }
     }

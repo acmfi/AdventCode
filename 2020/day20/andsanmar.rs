@@ -1,9 +1,8 @@
 use std::fs;
-use std::collections::HashMap;
 
 type Tile = Vec<Vec<bool>>;
 
-fn print_tile(tile: &Tile) { for x in tile {println!("{}", x.iter().map(|c| if *c {'#'} else {'.'}).collect::<String>())} }
+// fn print_tile(tile: &Tile) { for x in tile {println!("{}", x.iter().map(|c| if *c {'#'} else {'.'}).collect::<String>())} }
 
 fn rotate_left(tile: &Tile, dimension : usize) -> Tile {
     (0..dimension).map(|i| {
@@ -17,20 +16,19 @@ fn flip_upside_down(tile: &Tile, dimension: usize) -> Tile {
     }).collect()
 }
 
-fn matches(tiles : &[(usize,[[Tile;4];2])]) -> HashMap<usize,(usize,bool)> { // ID_a, ID_b, rot_sum%4, flipped_XOR
-    let mut matched : HashMap<usize,(usize,bool)> = HashMap::new();
+fn matches(tiles : &[(usize,[Tile;8])]) -> Vec<usize> {
+    let mut matched : Vec<usize> = Vec::new();
     match tiles.split_first() {
         None => matched,
         Some(((id_to_match, tiles_to_match), rest)) => {
-            for (flipped_to_match, to_match) in tiles_to_match.iter().enumerate() {
-                for (rot_to_match, tile_to_match) in to_match.iter().enumerate() {
-                    let border_to_match = &tile_to_match[0];
-                    for (id_matched, tiles_potential_matches) in rest {
-                        for (flipped_matched, potential_matches) in tiles_potential_matches.iter().enumerate() {
-                            for (rot_matched, tile_matched) in potential_matches.iter().enumerate() {
-                                if &tile_matched[0] == border_to_match {
-                                    matched.insert(id_to_match*id_matched,((rot_to_match+rot_matched) % 4, (flipped_to_match==1) ^ (flipped_matched==1)));
-                                }
+            for tile_to_match in tiles_to_match {
+                let border_to_match = &tile_to_match[0];
+                for (id_matched, tiles_potential_matches) in rest {
+                    for tile_matched in tiles_potential_matches {
+                        if &tile_matched[0] == border_to_match {
+                            let adj = id_to_match*id_matched;
+                            if !matched.contains(&adj) {
+                                matched.push(adj);
                             }
                         }
                     }
@@ -42,24 +40,24 @@ fn matches(tiles : &[(usize,[[Tile;4];2])]) -> HashMap<usize,(usize,bool)> { // 
     }
 }
 
-fn tile_adjacents(ids : &Vec<usize>, matches_id : Vec<&usize>) -> Vec<(usize,usize)> {
+fn tile_adjacents(ids : &Vec<usize>, matches_id : &Vec<usize>) -> Vec<(usize,usize)> {
     ids.iter().map(|id| (*id,matches_id.iter().filter(|id_m| **id_m % id == 0).count())).collect()
 }
 
-fn tile_by_right<'a>(left : &Tile, possibilities : &'a[[Tile;4];2]) -> &'a Tile {
+fn tile_by_right<'a>(left : &Tile, possibilities : &'a[Tile;8]) -> &'a Tile {
     let to_match : Vec<&bool> = left.iter().map(|r| r.last().unwrap()).collect();
-    possibilities.iter().flatten().find(|t| t.iter().map(|r| r.first().unwrap()).collect::<Vec<&bool>>() == to_match).unwrap()
+    possibilities.iter().find(|t| t.iter().map(|r| r.first().unwrap()).collect::<Vec<&bool>>() == to_match).unwrap()
 }
 
-fn tile_by_down<'a>(up : &Tile, possibilities : &'a [[Tile;4];2]) -> &'a Tile {
+fn tile_by_down<'a>(up : &Tile, possibilities : &'a [Tile;8]) -> &'a Tile {
     let to_match : &Vec<bool> = up.last().unwrap();
-    possibilities.iter().flatten().find(|t| t.first().unwrap() == to_match).unwrap()
+    possibilities.iter().find(|t| t.first().unwrap() == to_match).unwrap()
 }
 
 
-fn reconstruct_image(ids : &Vec<usize>, edges_matches : HashMap<usize,(usize,bool)>, tiles: &[(usize,[[Tile;4];2])]) -> Tile {
+fn reconstruct_image(ids : &Vec<usize>, matches_id : &Vec<usize>, tiles: &[(usize,[Tile;8])]) -> Tile {
     let dimension = (tiles.len() as f64).sqrt() as usize;
-    let adjacencies : Vec<(usize,Vec<usize>)> = ids.iter().map(|id| (*id,edges_matches.keys().filter(|id_m| **id_m % id == 0).map(|id_m| id_m / id).collect())).collect();
+    let adjacencies : Vec<(usize,Vec<usize>)> = ids.iter().map(|id| (*id,matches_id.iter().filter(|id_m| **id_m % id == 0).map(|id_m| id_m / id).collect())).collect();
     // 1st step, place the ids to satisfy the adjacency constraints
     // `image_ids` could be defined with slices, but their dimension is not dynamic
     let mut image_ids : Vec<Vec<Option<usize>>> = vec![vec![None;dimension];dimension];
@@ -90,7 +88,7 @@ fn reconstruct_image(ids : &Vec<usize>, edges_matches : HashMap<usize,(usize,boo
     }
     // 2nd step, place the tiles correctly flipped & rotated
     let mut image_tiles : Vec<Vec<Option<&Tile>>> = vec![vec![None;dimension];dimension];
-    image_tiles[0][0] = Some(&tiles.iter().find(|(t_id,_)| t_id == &image_ids[0][0].unwrap()).unwrap().1[0][0]); // FIXME selection of the first tile (it may not be oriented)
+    image_tiles[0][0] = Some(&tiles.iter().find(|(t_id,_)| t_id == &image_ids[0][0].unwrap()).unwrap().1[0]); // FIXME selection of the first tile (it may not be oriented)
     for x in 0..dimension {
         for y in 0..dimension {
             if image_tiles[x][y] == None {
@@ -138,7 +136,7 @@ fn find_pattern(image : &mut Tile) {
     }
 }
 
-fn obtain_transformations(tile : Tile) -> [[Tile;4];2] {
+fn obtain_transformations(tile : Tile) -> [Tile;8] {
     let dimension = tile.first().unwrap().len();
     let rot_1 = rotate_left(&tile, dimension);
     let rot_2 = rotate_left(&rot_1, dimension);
@@ -147,25 +145,24 @@ fn obtain_transformations(tile : Tile) -> [[Tile;4];2] {
     let flip_1 = flip_upside_down(&rot_1, dimension);
     let flip_2 = flip_upside_down(&rot_2, dimension);
     let flip_3 = flip_upside_down(&rot_3, dimension);
-    [[tile, rot_1, rot_2, rot_3], [flip_0, flip_1, flip_2, flip_3]]
+    [tile, rot_1, rot_2, rot_3, flip_0, flip_1, flip_2, flip_3]
 }
 
 fn main () {
     let r = fs::read_to_string("input").unwrap();
     // 4 rotations included
-    let tiles : Vec<(usize,[[Tile;4];2])> = r.split("\n\n").map(|tile| {
+    let tiles : Vec<(usize,[Tile;8])> = r.split("\n\n").map(|tile| {
         let mut it = tile.lines();
         let id_tile = it.next().unwrap().split_whitespace().skip(1).next().unwrap()[..4].parse::<usize>().unwrap();
         let tile : Tile = it.map(|l| l.chars().map(|c| c == '#').collect()).collect();
         (id_tile, obtain_transformations(tile))
     }).collect();
-    // key is a `usize` because ids are prime numbers, this way search is supposed to be easier, a tuple of both numbers is OK too
-    // TODO hashmap values are never used, drop them
-    let m : HashMap<usize,(usize,bool)> = matches(tiles.as_slice());
+    // A single `usize` with the product of IDs, because ids are prime numbers, instead of a tuple, this search facilitates the unidirectionality
+    let m : Vec<usize> = matches(tiles.as_slice());
     let ids = tiles.iter().map(|(id,_)| *id).collect();
-    let adjs = tile_adjacents(&ids,m.keys().collect());
+    let adjs = tile_adjacents(&ids,&m);
     let corners = adjs.iter().filter(|(_,n)| n == &2).map(|(id,_)| id);
     println!("{:?}", corners.product::<usize>());
-    let image = reconstruct_image(&ids, m, tiles.as_slice());
-    for t in obtain_transformations(image).iter().flatten() {find_pattern(&mut t.to_vec());}
+    let image = reconstruct_image(&ids, &m, tiles.as_slice());
+    for t in obtain_transformations(image).iter() {find_pattern(&mut t.to_vec());}
 }

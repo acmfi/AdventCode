@@ -3,6 +3,8 @@ use std::fs;
 type Tile = Vec<Vec<bool>>;
 
 const PATTERN : [(usize,usize);15] = [(0,18),(1,0),(1,5),(1,6),(1,11),(1,12),(1,17),(1,18),(1,19),(2,1),(2,4),(2,7),(2,10),(2,13),(2,16)];
+const PATTERN_WIDTH : usize = 19;
+const PATTERN_HEIGHT : usize = 2;
 
 // fn print_tile(tile: &Tile) { for x in tile {println!("{}", x.iter().map(|c| if *c {'#'} else {'.'}).collect::<String>())} }
 
@@ -125,8 +127,8 @@ fn reconstruct_image(ids : &Vec<usize>, matches_id : &Vec<usize>, tiles: &[(usiz
 
 fn find_pattern(image : &mut Tile) {
     let mut found = false;
-    for x in 0..image.len()-2 {
-        for y in 0..image[x].len()-19 {
+    for x in 0..image.len()-PATTERN_HEIGHT {
+        for y in 0..image[x].len()-PATTERN_WIDTH {
             if PATTERN.iter().all(|(x1,y1)| image[x+x1][y+y1]) {
                 found = true;
                 for (x1,y1) in PATTERN.iter() { image[x+x1][y+y1] = false }

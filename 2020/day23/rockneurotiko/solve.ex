@@ -1,37 +1,50 @@
 defmodule Aoc.Aoc2020.Day23.Solve do
   @base_path Path.dirname(__ENV__.file)
 
-  defmodule Zip do
-    def new(l) do
-      {l, []}
+  defmodule MDL do
+    def new([]), do: {%{}, nil}
+
+    def new([n | rest]) do
+      {last, acc} =
+        Enum.reduce(rest, {n, %{}}, fn e, {p, acc} ->
+          {e, Map.put(acc, p, e)}
+        end)
+
+      {Map.put(acc, last, n), n}
     end
 
-    def next({[], r}), do: next({Enum.reverse(r), []})
-
-    def next({[x | l], r}), do: {l, [x | r]}
-
-    def pop({[], r}), do: pop({Enum.reverse(r), []})
-    def pop({[x | l], r}), do: {x, {l, r}}
-
-    def insert_many_at({[], r}, n, vs) do
-      insert_many_at({Enum.reverse(r), []}, n, vs)
+    def next({st, c}) do
+      {st, Map.get(st, c)}
     end
 
-    def insert_many_at({[n | l], r}, n, vs), do: {[n | vs] ++ l, r}
+    def value({_st, c}), do: c
 
-    def insert_many_at({[nn | l], r}, n, vs) do
-      {nl, nr} = insert_many_at({l, r}, n, vs)
-      {[nn | nl], nr}
+    def insert({st, c}, n) do
+      next = Map.get(st, c)
+
+      {st |> Map.put(c, n) |> Map.put(n, next), c}
     end
 
-    def value({[], r}), do: value({Enum.reverse(r), []})
+    def find!({st, _c}, n), do: {st, n}
 
-    def value({[x | _], _r} = zip), do: {x, zip}
+    def pop_next({mdl, c}) do
+      pop = Map.get(mdl, c)
 
-    def to_list({l, r}), do: l ++ Enum.reverse(r)
+      mdl = mdl |> Map.put(c, Map.get(mdl, pop)) |> Map.delete(pop)
+
+      {pop, {mdl, c}}
+    end
+
+    def to_list({mdl, _c}) when mdl == %{}, do: []
+
+    def to_list({mdl, c}) do
+      {n, mdl} = Map.pop(mdl, c)
+
+      [c | to_list({mdl, n})]
+    end
   end
 
-  alias __MODULE__.Zip
+  alias __MODULE__.MDL
 
   def star1(input) do
     {l, [1 | r]} = play(input, 100, 9) |> Enum.split_while(&(&1 != 1))
@@ -47,32 +60,33 @@ defmodule Aoc.Aoc2020.Day23.Solve do
     n1 * n2
   end
 
-  defp play(cups, n, max) when is_list(cups), do: play(Zip.new(cups), n, max)
+  defp play(cups, n, max) when is_list(cups), do: play(MDL.new(cups), n, max)
 
-  defp play(cups, 0, _max), do: Zip.to_list(cups)
+  defp play(cups, 0, _max), do: MDL.to_list(cups)
 
   defp play(cups, n, max) do
-    if Integer.mod(n, 100) == 0, do: IO.puts(n)
-
     cups |> play_round(max) |> play(n - 1, max)
   end
 
   defp play_round(cups, max) do
-    {current, cups} = Zip.value(cups)
-
-    cups = Zip.next(cups)
+    current = MDL.value(cups)
 
     {cups, ps} =
       0..2
       |> Enum.reduce({cups, []}, fn _, {cups, acc} ->
-        {n, cups} = Zip.pop(cups)
+        {n, cups} = MDL.pop_next(cups)
 
         {cups, acc ++ [n]}
       end)
 
     next_n = select_next(current - 1, ps, max)
 
-    Zip.insert_many_at(cups, next_n, ps)
+    ps
+    |> Enum.reduce(MDL.find!(cups, next_n), fn p, cups ->
+      cups |> MDL.insert(p) |> MDL.next()
+    end)
+    |> MDL.find!(current)
+    |> MDL.next()
   end
 
   defp select_next(c, picks, max) when c < 1, do: select_next(max, picks, max)

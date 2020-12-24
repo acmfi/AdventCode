@@ -2,12 +2,8 @@ use std::fs;
 
 #[derive(Debug)]
 enum Dir {
-    East,
-    West,
-    SouthEast,
-    SouthWest,
-    NorthEast,
-    NorthWest,
+    East, SouthEast, NorthEast,
+    West, SouthWest, NorthWest
 }
 
 fn coord(v: &Dir) -> (isize, isize) {
@@ -41,42 +37,35 @@ fn automaton(floor_blacks: &Vec<(isize,isize)>) -> Vec<(isize,isize)> {
 
 fn main() {
     let r: String = fs::read_to_string("input").unwrap();
-    let t // : Vec<Vec<Dir>>
-        = r.lines().map(|l| {
-        let mut tiles : Vec<Dir> = Vec::new();
-        let mut ns : Option<bool> =  None;
-        for c in l.chars() {
+    let t = r.lines().map(|l| {
+        l.chars().fold((Vec::new(),None), |(mut tiles,mut ns),c| {
             match ns {
-                None => match c {
+                None => {match c {
                     'e' => tiles.push(Dir::East),
                     'w' => tiles.push(Dir::West),
                     'n' => ns = Some(true),
                     's' => ns = Some(false),
                     _ => panic!()
-                },
+                }; (tiles,ns)},
                 Some(true) => {tiles.push(match c {
                     'e' => Dir::NorthEast,
                     'w' => Dir::NorthWest,
                     _ => panic!()
-                }); ns = None},
+                }); (tiles,None)},
                 Some(false) => {tiles.push(match c {
                     'e' => Dir::SouthEast,
                     'w' => Dir::SouthWest,
                     _ => panic!()
-                }); ns = None},
+                }); (tiles,None)},
             }
-        }
-        tiles
+        }).0
     });
 
-    let tiles_coords: Vec<(isize, isize)> = t
-        .map(|dirs| {
-            dirs.iter().fold((0, 0), |(cx, cy), d| {
-                let (sx, sy) = coord(d);
-                (cx + sx, cy + sy)
-            })
-        })
-        .collect();
+    let tiles_coords: Vec<(isize, isize)> = t.map(|dirs| {
+        dirs.iter().fold((0, 0), |(cx, cy), d| {
+            let (sx, sy) = coord(d);
+            (cx + sx, cy + sy)
+        })}).collect();
 
     let blacks: Vec<(isize, isize)> = tiles_coords.iter().filter(|c| tiles_coords.iter().filter(|x| x == c).count() % 2 == 1).map(|x| *x).collect();
     

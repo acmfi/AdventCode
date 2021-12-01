@@ -1,5 +1,17 @@
+from sys import argv
+from os import listdir
+
+if len(argv) == 2 and argv[1] in listdir('./'):
+    filename = argv[1]
+elif 'input' in listdir('./'):
+    filename = 'input'
+else:
+    print('Not a valid input file.')
+    exit()
+
+
 def boarding_passes():
-    with open('day05.input', 'r') as f:
+    with open(filename, 'r') as f:
         while (line := f.readline()) != '':
             line = line.strip('\n')
             row = int(line[:-3].replace('F', '0').replace('B', '1'), 2)

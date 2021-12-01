@@ -1,5 +1,17 @@
+from sys import argv
+from os import listdir
+
+if len(argv) == 2 and argv[1] in listdir('./'):
+    filename = argv[1]
+elif 'input' in listdir('./'):
+    filename = 'input'
+else:
+    print('Not a valid input file.')
+    exit()
+
+
 def lines(skip):
-    with open('day03.input', 'r') as f:
+    with open(filename, 'r') as f:
         while (l := f.readline()) != '':
             for i in range(skip):
                 f.readline()

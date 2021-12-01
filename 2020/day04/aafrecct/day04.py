@@ -1,9 +1,21 @@
+from sys import argv
+from os import listdir
+
+if len(argv) == 2 and argv[1] in listdir('./'):
+    filename = argv[1]
+elif 'input' in listdir('./'):
+    filename = 'input'
+else:
+    print('Not a valid input file.')
+    exit()
+
+
 hexdigits = "0123456789abcdef"
 req_fields = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid']
 
 
 def passports():
-    with open('day04.input', 'r') as f:
+    with open(filename, 'r') as f:
         passport = {}
         while (l := f.readline()) != '':
             l = l.strip('\n')   # Bad old habits need to be changed sometime.

@@ -61,7 +61,7 @@ func star1(diags []string) uint64 {
 	return gamma * epsilon
 }
 
-func filter(diags []string, bit int, bitCriteria func(uint, uint) rune) []string {
+func filter(diags []string, bit int, bitCriteria func(uint, uint) byte) []string {
 	// If there is just one diagnostic we do not need filtering
 	if len(diags) == 1 {
 		return diags
@@ -75,7 +75,7 @@ func filter(diags []string, bit int, bitCriteria func(uint, uint) rune) []string
 	newDiags := []string{}
 
 	for _, diag := range diags {
-		if rune(diag[bit]) == wantedBit {
+		if diag[bit] == wantedBit {
 			newDiags = append(newDiags, diag)
 		}
 	}
@@ -89,7 +89,7 @@ func star2(diags []string) uint64 {
 
 	for bit := 0; bit < len(diags[0]); bit++ {
 		// O2 Generator Rating
-		o2 = filter(o2, bit, func(ones uint, zeros uint) rune {
+		o2 = filter(o2, bit, func(ones uint, zeros uint) byte {
 			if ones < zeros {
 				return '0'
 			}
@@ -97,7 +97,7 @@ func star2(diags []string) uint64 {
 		})
 
 		// CO2 Scrubber Rating
-		co2 = filter(co2, bit, func(ones uint, zeros uint) rune {
+		co2 = filter(co2, bit, func(ones uint, zeros uint) byte {
 			if ones < zeros {
 				return '1'
 			}

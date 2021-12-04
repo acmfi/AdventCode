@@ -9,26 +9,9 @@ fn cross(b : &mut Board, n : usize) {
                 e.1 = true; }}}
 }
 
-fn win_board(b : &Board) -> bool {
-    b.iter().any(|l| { l.iter().all(|e| e.1) })
-}
+fn win_board(b : &Board) -> bool { b.iter().any(|l| { l.iter().all(|e| e.1) }) }
 
-fn star1((said, t) : &Bingo) {
-    let mut tables : Vec<Board> = t.clone();
-    for x in said {
-        for b in tables.iter_mut() {
-            cross(b, *x);
-            if win_board(b) || win_board(&transpose(b.clone())) {
-                let board_sum = b.iter().map(|l2| l2.iter().map(|e| if !e.1 {e.0} else {0}).sum::<usize>()).sum::<usize>();
-                println!("{}", board_sum*x);
-                return;
-            }
-        }
-    }
-    println!();
-}
-
-fn star2((said, t) : &Bingo) {
+fn stars((said, t) : &Bingo) {
     let mut tables : Vec<Board> = t.clone();
     let mut completed : Vec<bool> = vec![false; tables.len()];
     for x in said {
@@ -36,15 +19,16 @@ fn star2((said, t) : &Bingo) {
             let b = tables.get_mut(i).unwrap();
             cross(b, *x);
             if completed[i] == true || win_board(b) || win_board(&transpose(b.clone())) {
+                if completed.iter().all(|x| !*x) {
+                    let board_sum = b.iter().map(|l2| l2.iter().map(|e| if !e.1 {e.0} else {0}).sum::<usize>()).sum::<usize>();
+                    println!("{}", board_sum*x);
+                }
                 completed[i] = true;
                 if completed.iter().all(|x| *x) {
                     let board_sum = b.iter().map(|l2| l2.iter().map(|e| if !e.1 {e.0} else {0}).sum::<usize>()).sum::<usize>();
                     println!("{}", board_sum*x);
                     return;
-                }
-            }
-        }
-    }
+                }}}}
     println!();
 }
 
@@ -72,20 +56,11 @@ fn transpose<T>(v: Vec<Vec<T>>) -> Vec<Vec<T>> {
 
 
 fn parse_input(s : String) -> Bingo {
-    let mut lines = s.lines();
-    let nums : Vec<usize> = parse_line(&s, ',');
-    let mut boards : Vec<Board> = vec![];
-    lines.next();
-    let mut current_board : Vec<Line> = Vec::new();
-    while let Some(line) = lines.next() {
-        if line.len() == 0 {
-            if !current_board.is_empty() { boards.push(current_board); current_board = vec![]; }            
-            continue;
-        }
-        let array: Line = parse_line(line, ' ').iter().map(|x| (*x,false)).collect();
-        current_board.push(array);
-    }
-    if !current_board.is_empty() { boards.push(current_board); }
+    let mut components = s.split("\n\n");
+    let nums : Vec<usize> = parse_line(&components.next().unwrap(), ',');
+    let boards : Vec<Board> = components.map(|b| {b.lines().map(|line| {
+        parse_line(line, ' ').iter().map(|x| (*x,false)).collect()
+    }).collect()}).collect();
     (nums, boards)
 }
 
@@ -97,6 +72,5 @@ fn main() {
         std::process::exit(1);
     };
     let b : Bingo = parse_input(std::fs::read_to_string(args[1].clone()).unwrap());
-    star1(&b);
-    star2(&b);
+    stars(&b);
 }

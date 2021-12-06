@@ -36,9 +36,8 @@ func solve(ages []int, days int) uint64 {
 
 		// Decrement fish ages
 		for age := 1; age <= 8; age++ {
-			count := fish[age]
-			fish[age] -= count
-			fish[age-1] += count
+			fish[age-1] += fish[age]
+			fish[age] = 0
 		}
 
 		// Fish with age 0 become with age 6 and spawns fish with age 8

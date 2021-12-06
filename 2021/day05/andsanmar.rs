@@ -33,28 +33,12 @@ fn stars(s:&Vec<Segment>) {
     }
     println!("{}", grid.iter().flatten().filter(|x| **x>1).count());
     for (i,e) in diagonal {
-        let min_x = i.0.min(e.0);
-        let max_x = i.0.max(e.0);
-        if i.0 < e.0 {
-            if i.1 < e.1 {
-                for inc in 0..=(max_x-min_x) {
-                    grid[i.0+inc][i.1+inc] += 1
-                }
-            } else {
-                for inc in 0..=(max_x-min_x) {
-                    grid[i.0+inc][i.1-inc] += 1
-                }
-            }
-        } else {
-            if i.1 < e.1 {         
-                for inc in 0..=(max_x-min_x) {
-                    grid[i.0-inc][i.1+inc] += 1
-                }
-            } else {
-                for inc in 0..=(max_x-min_x) {
-                    grid[i.0-inc][i.1-inc] += 1
-                }                
-            }
+        let magn = (e.0 as isize - i.0 as isize).abs();
+        let step : (isize, isize) = (if i.0 > e.0 {-1} else {1}, if i.1 > e.1 {-1} else {1});
+        for inc in 0..=magn {
+            let x = (i.0 as isize +step.0*(inc as isize)) as usize;
+            let y = (i.1 as isize +step.1*(inc as isize)) as usize;
+            grid[x][y] += 1;
         }
     }
     println!("{}", grid.iter().flatten().filter(|x| **x>1).count());

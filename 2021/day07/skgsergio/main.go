@@ -39,10 +39,11 @@ func solve(positions []int, constant bool) int {
 			if constant {
 				fuel += dist
 			} else {
-				// Moving from to target requires dist! fuel, beeing
-				// dist = |target - from|. Example:
-				// 2 to 5 requires 3 steps, each one increases its fuel
-				// cost in 1: 1 (2->3) + 2 (3->4) + 3 (3->5) = 1 + 2 + 3 = 3!
+				// Moving from to target requires 1 unit of fuel each step
+				// starting in 1 unit in the first step. Step 1 requires 1 unit,
+				// step 2 requires 2 units, step 3 requires 3 units, ...
+				// For exampple 2 to 5 requires 3 steps:
+				// 1 (2->3) + 2 (3->4) + 3 (3->5) = 1 + 2 + 3
 				// Slow version: for f := 0; f <= dist; f++ { fuel += f }
 				fuel += dist * (dist + 1) / 2
 			}

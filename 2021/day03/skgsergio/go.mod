@@ -1,4 +1,4 @@
-module aoc21
+module aoc21day03skgsergio
 
 go 1.17
 

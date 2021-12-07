@@ -16,14 +16,14 @@ for i in range(max(crabs_position)):
 
 print(smaller_pos)
 
-# Second star (slow af)
+# Second star
 smaller_pos = None
 for i in range(max(crabs_position)):
     aux_pos = 0
     for crab in crabs_position:
         delta = abs(i-crab)
         if delta > 0:
-            fuel_consumption = reduce(lambda x,y: x+y, range(1,delta+1))
+            fuel_consumption = delta*(delta+1)//2 # Changed the expensive O(n) reduce for O(1) binomial coefficient
             aux_pos += fuel_consumption
     if not smaller_pos or aux_pos < smaller_pos:
         smaller_pos = aux_pos

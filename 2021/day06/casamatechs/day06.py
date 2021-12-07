@@ -14,7 +14,7 @@ def calc_fishes(days, fishes):
     for _ in range(days):
         fishes = fishes[1:] + fishes[:1]
         fishes[6] += fishes[-1]
-    return reduce(lambda x,y: x + y, fishes)
+    return sum(fishes)
 
 print(calc_fishes(80, fishes_spawn))
 print(calc_fishes(256,fishes_spawn))

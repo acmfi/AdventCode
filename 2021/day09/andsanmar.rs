@@ -1,26 +1,15 @@
 use std::collections::HashSet;
 
-fn adjs((i,j): (usize,usize), s : &Vec<Vec<usize>>) -> Vec<((usize,usize),usize)> {
-    let mut r : Vec<((usize,usize),usize)> = vec![];
-    if let Some(v) = s.get(i-1) {
-        r.push(((i-1,j),v[j]));
-    }
-    if let Some(e) = s[i].get(j-1) {
-        r.push(((i,j-1),*e));
-    }
-    if let Some(e) = s[i].get(j+1) {
-        r.push(((i,j+1),*e));
-    }
-    if let Some(v) = s.get(i+1) {
-        r.push(((i+1,j),v[j]));
-    }
-    r
+fn adjs((i,j): (usize,usize), s : &Vec<Vec<usize>>) -> Vec<(usize,usize)> {
+    let x_size = s.len();
+    let y_size = s[0].len();
+    [(i-1,j),(i,j-1),(i,j+1),(i+1,j)].iter().filter(|(x,y)| *x < x_size && *y < y_size).map(|x| *x).collect()
 }
 
 fn basin((i,j): (usize,usize), s : &Vec<Vec<usize>>) -> HashSet<(usize,usize)> {
     let mut higher : HashSet<(usize,usize)> = HashSet::new();
     let low = s[i][j];
-    for (c,_) in adjs((i,j), s).iter().filter(|(_,e)| *e > low  && *e !=9) {
+    for c in adjs((i,j), s).iter().filter(|c| { s[c.0][c.1] > low  && s[c.0][c.1] !=9 }) {
         higher.insert(*c);
         higher.extend(&basin(*c, s));
     }
@@ -32,7 +21,7 @@ fn stars(s : &Vec<Vec<usize>>) {
     for i in 0..s.len() {
         for j in 0..s[i].len() {
             let low = s[i][j];
-            if adjs((i,j), s).iter().all(|(_,e)| *e > low) {
+            if adjs((i,j), s).iter().all(|c| {s[c.0][c.1] > low}) {
                 low_points.push((i,j));
             }
         }

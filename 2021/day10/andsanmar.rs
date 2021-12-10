@@ -28,15 +28,26 @@ fn contr(c : char) -> char {
     }
 }
 
-
-fn value_line(l : &Vec<char>, pos : usize) -> Result<(usize,usize),usize> { // Format: (position,accumulated punctuation),Malformed
+// This problem is normally solved through stacks, so what if we use the calling stack? :)
+// We pass over the current checked position (this can be done as well with subslices)
+// Format: OK -> (position,accumulated punctuation), Err -> Malformed punctuation
+fn value_line(l : &Vec<char>, pos : usize) -> Result<(usize,usize),usize> {
     if pos >= l.len() { return Ok((pos,0)) }
     match l[pos] {
         '{' | '(' | '<' | '[' => match value_line(l, pos+1) {
             Ok((p,acc_p)) => {
-                if p >= l.len() { Ok((p,acc_p*5+points_uncomplete(contr(l[pos])))) }
-                else if l[p] != contr(l[pos]) { Err(points(l[p])) }
-                else { value_line(l,p+1) }
+                if p >= l.len() {
+                    // We reach the end of the string but miss the closing character, increase te punctuation
+                    Ok((p,acc_p*5+points_uncomplete(contr(l[pos]))))
+                }
+                else if l[p] != contr(l[pos]) {
+                    // As the next character is not matching the opening, this is a malformed line
+                    Err(points(l[p]))
+                }
+                else {
+                    // We recursively check the inner constructions
+                    value_line(l,p+1)
+                }
             },
             Err(y) => Err(y)
         },
@@ -45,12 +56,16 @@ fn value_line(l : &Vec<char>, pos : usize) -> Result<(usize,usize),usize> { // F
 }
 
 fn stars(s : &Vec<String>) {
-    let values : Vec<Result<(usize,usize),usize>> = s.iter().map(|l| value_line(&l.chars().collect(), 0)).collect();
+    let values : Vec<Result<(usize,usize),usize>> = s.iter().map(
+        |l| value_line(&l.chars().collect(), 0)
+    ).collect();
+    // We sum the punctuation of all malformed lines 
     let star1 = values.iter().filter_map(|n| match n {
         Err(i) => Some(i),
         _ => None
     });
     println!("{:?}", star1.sum::<usize>());
+    // We get all incomplete lines and access the value in the middle
     let mut star2 : Vec<usize> = values.iter().filter_map(|n| match n {
         Ok((_a,b)) => Some(*b),
         _ => None

@@ -1,10 +1,8 @@
 from copy import deepcopy
 
 f = open('input')
-data = [list(line.strip()) for line in f.readlines()]
-
 matrix = []
-for idx, line in enumerate(data):
+for line in [list(line.strip()) for line in f.readlines()]:
     matrix += [[int(x) for x in line]]
 
 flashing_x = [0,0,1,1,1,-1,-1,-1]

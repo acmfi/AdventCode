@@ -32,7 +32,7 @@ func (e *Element) IsEdge() bool {
 type Pair [2]Element
 
 func (p *Pair) IsEdge() bool {
-	return p[0].IsEdge() || p[0].IsEdge()
+	return p[0].IsEdge() || p[1].IsEdge()
 }
 
 func polimerization(template string, rules map[Pair]Element, steps int) int {
@@ -64,31 +64,34 @@ func polimerization(template string, rules map[Pair]Element, steps int) int {
 		pairs = stepPairs
 	}
 
-	// Count the number of individual elements extracting them from the pairs.
+	// Count the number of individual elements extracting them from the pairs,
+	// and find the max and min counts.
 	counts := map[Element]int{}
 	for pair, count := range pairs {
 		counts[pair[0]] += count
 		counts[pair[1]] += count
 	}
 
-	// Find the max and the min
 	max, min := math.MinInt, math.MaxInt
-	for element, counts := range counts {
+	for element, count := range counts {
 		if element.IsEdge() {
 			continue
 		}
 
-		if counts < min {
-			min = counts
+		// As Pairs overlap we need to divide the values
+		// by 2 as we are counting elements twice.
+		count /= 2
+
+		if count < min {
+			min = count
 		}
 
-		if counts > max {
-			max = counts
+		if count > max {
+			max = count
 		}
 	}
 
-	// As Pairs overlap we need to divide the values by 2 as we are counting elements twice.
-	return (max - min) / 2
+	return max - min
 }
 
 func solve(template string, rules map[Pair]Element) (int, int) {

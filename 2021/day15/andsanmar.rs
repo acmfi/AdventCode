@@ -1,46 +1,44 @@
-use std::collections::HashSet;
+use std::collections::HashMap;
 
 fn star1(s: &Vec<Vec<u16>>) {
-    let mut visited : HashSet<(usize,usize)> = HashSet::new();
-    let mut adjacents : HashSet<(usize,usize)> = HashSet::new();
+    // Distances from starting point, updated while visiting new points
+    let mut visited : HashMap<(usize,usize),u16> = HashMap::new();
+    let mut adjacents : HashMap<(usize,usize),u16> = HashMap::new();
     let x_d = s.len();
     let y_d = s[0].len();
 
-    // Distances from starting point, updated while visiting new points
-    let mut m : Vec<Vec<Option<u16>>> = vec![vec![None;s.len()];s.len()];
-
     // Initaliziation phase
-    m[0][0] = Some(0);
-    m[1][0] = Some(s[1][0]);
-    adjacents.insert((1,0));
-    m[0][1] = Some(s[0][1]);
-    adjacents.insert((0,1));
+    visited.insert((0,0),0);
+    adjacents.insert((1,0),s[1][0]);
+    adjacents.insert((0,1),s[0][1]);
 
     // We track the sum of risks until we reach the end point
-    while m[x_d-1][y_d-1] == None {
-        let (i,j) = *adjacents.iter().min_by(
-            |(x1,y1),(x2,y2)| m[*x1][*y1].cmp(&m[*x2][*y2])
+    while visited.get(&(x_d-1,y_d-1)) == None {
+        let l = adjacents.iter().min_by(
+            |(_,n1),(_,n2)| n1.cmp(&n2)
         ).unwrap();
-        visited.insert((i,j));
+        let ((i,j),n) = (*l.0,*l.1);
+        visited.insert((i,j), n);
         adjacents.remove(&(i,j));
 
         // We consider the new adjacents if they have not been visited
         for (x,y) in [(i-1,j),(i+1,j),(i,j-1),(i,j+1)] {
-            if x < x_d && y < y_d && !visited.contains(&(x,y)) {
-                adjacents.insert((x,y));
-                let new_value = m[i][j].unwrap() + s[x][y];
-                match m[x][y] {
-                    Some(n) => if n > new_value {
-                        m[x][y] = Some(new_value);
-                    },
-                    None => {
-                        m[x][y] = Some(new_value);
+            if x < x_d && y < y_d && visited.get(&(x,y)) == None {
+                let new_value = visited.get(&(i,j)).unwrap() + s[x][y];
+                let old_value = adjacents.get(&(x,y));
+                let v = match old_value {
+                    None => new_value,
+                    Some(ov) => if *ov < new_value {
+                        *ov
+                    } else {
+                        new_value
                     }
-                }
+                };
+                adjacents.insert((x,y),v);
             }
         }
     }
-    println!("{}", m[x_d-1][y_d-1].unwrap());
+    println!("{}", visited.get(&(x_d-1,y_d-1)).unwrap());
 }
 
 

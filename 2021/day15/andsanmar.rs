@@ -18,19 +18,8 @@ fn star1(s: &Vec<Vec<u16>>) {
 
     // We track the sum of risks until we reach the end point
     while m[x_d-1][y_d-1] == None {
-        let (i,j) = adjacents.iter().filter_map(
-            |(x,y)| {
-                if *x < x_d && *y < y_d {
-                    match m[*x][*y] {
-                        Some(_) => Some((*x,*y)),
-                        None => None
-                    }                    
-                } else {
-                    None
-                }
-            }
-        ).min_by(
-            |p1,p2| m[p1.0][p1.1].cmp(&m[p2.0][p2.1])
+        let (i,j) = *adjacents.iter().min_by(
+            |(x1,y1),(x2,y2)| m[*x1][*y1].cmp(&m[*x2][*y2])
         ).unwrap();
         visited.insert((i,j));
         adjacents.remove(&(i,j));

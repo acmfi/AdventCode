@@ -8,6 +8,7 @@ fn star1(s: &Vec<Vec<u16>>) {
     let y_d = s[0].len();
 
     // Initaliziation phase
+    visited.insert((0,0),0);
     adjacents.insert((1,0),s[1][0]);
     adjacents.insert((0,1),s[0][1]);
 

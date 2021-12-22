@@ -106,3 +106,12 @@ def sum_numbers(input: list):
     return number_left
 
 print(sum_numbers(input).calc_magnitude())
+
+#Star 2
+
+max_magnitude = 0
+for left in input:
+    for right in input:
+        if left != right:
+            max_magnitude = max(max_magnitude,reduce_snail(Node(left=parse(left),right=parse(right))).calc_magnitude())
+print(max_magnitude)

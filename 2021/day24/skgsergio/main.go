@@ -43,7 +43,7 @@ func NewRange(from int, to int, step int) *Range {
 func (r *Range) Iter() chan int {
 	c := make(chan int)
 	go func() {
-		for i := r.from; i != r.to; i += r.step {
+		for i := r.from; (r.step > 0 && i < r.to) || (r.step < 0 && i > r.to); i += r.step {
 			c <- i
 		}
 		close(c)

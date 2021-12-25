@@ -6,9 +6,9 @@ input = [line.strip('\n') for line in f.readlines()]
 
 instructions = [x.split(' ') for x in input]
 
-A=[1,1,1,1,26,26,1,26,1,26,1,26,26,26]
-B=[13,13,10,15,-8,-10,11,-3,14,-4,14,-5,-8,-11]
-C=[15,16,4,14,1,5,1,3,3,7,5,13,3,10]
+A=[int(instructions[x][2]) for x in range(4,252,18)]
+B=[int(instructions[x][2]) for x in range(5,252,18)]
+C=[int(instructions[x][2]) for x in range(15,252,18)]
 
 map_pos = {}
 aux_stack = []

@@ -1,8 +1,8 @@
 # Advent Code
 
-Code of the solutions of Advent Code: http://adventofcode.com
+Code for the solutions of Advent Code: http://adventofcode.com
 
-Every day is in it's own directory, and every user must create his own directory for every day he/she answer.
+Every day shoul be in it's own directory, and every user must create his own directory for every day they answer.
 
 Leaderboard: 196473-6dc11ccc
 
@@ -47,6 +47,7 @@ Leaderboard: 196473-6dc11ccc
 - Racket
 - Scheme
 - Verilog
+- Nim
 - Sed?
 - LaTeX?
 - Brainfuck? / Otro esoterico

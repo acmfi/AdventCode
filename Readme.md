@@ -47,7 +47,6 @@ Leaderboard: 196473-6dc11ccc
 - Racket
 - Scheme
 - Verilog
-- Nim
 - Sed?
 - LaTeX?
 - Brainfuck? / Otro esoterico

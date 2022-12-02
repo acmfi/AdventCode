@@ -1,0 +1,3 @@
+%{
+  "aoc": {:git, "https://github.com/Ironjanowar/aoc.git", "a0aa1a90ecc0f4a350916ff2f81def2bbb83a2de", [branch: "master"]},
+}

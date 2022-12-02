@@ -5,39 +5,41 @@ enum RPS {
     Scissors
 }
 
+impl RPS {
+    fn points(&self) -> u64 {
+        match self {
+            RPS::Rock => 1,
+            RPS::Paper => 2,
+            RPS::Scissors => 3
+        }
+    }
+
+    fn won_by(&self)  -> RPS {
+        match self {
+            RPS::Rock => RPS::Paper,
+            RPS::Paper => RPS::Scissors,
+            RPS::Scissors => RPS::Rock
+        }
+    }
+}
+
 type Struct = Vec<(RPS,RPS)>;
-
-fn points_figure(fig : RPS) -> u64 {
-    match fig {
-        RPS::Rock => 1,
-        RPS::Paper => 2,
-        RPS::Scissors => 3
-    }
-}
-
-fn winner (inp : RPS) -> RPS {
-    match inp {
-        RPS::Rock => RPS::Paper,
-        RPS::Paper => RPS::Scissors,
-        RPS::Scissors => RPS::Rock
-    }
-}
 
 fn points((p1, p2)  : (RPS, RPS)) -> u64 {
     (if p1 == p2 {
         3
-    } else if p2 == winner(p1) {
+    } else if p2 == p1.won_by() {
         6
     } else {
         0
-    }) + points_figure(p2)
+    }) + p2.points()
 }
 
 fn points2((p1, p2)  : (RPS, RPS)) -> u64 {
     match p2 {
-        RPS::Paper => 3 + points_figure(p1), // Draw
-        RPS::Scissors => 6 + points_figure(winner(p1)), // Win
-        RPS::Rock => 0 + points_figure(winner(winner(p1))) // Lose
+        RPS::Paper => 3 + p1.points(), // Draw
+        RPS::Scissors => 6 + p1.won_by().points(), // Win
+        RPS::Rock => 0 + p1.won_by().won_by().points() // Lose
     }
 }
 

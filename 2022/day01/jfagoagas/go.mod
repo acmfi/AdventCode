@@ -1,3 +1,3 @@
-module day01
+module jfagoagasaoc2022day01
 
 go 1.19

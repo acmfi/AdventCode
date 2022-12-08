@@ -4,7 +4,7 @@ type Struct = Vec<char>;
 
 fn star(l : &Struct, j : usize) {
     let n = (j..l.len()).filter(|i| {
-        let a : HashSet<char> = l[i-j..*i].iter().map(|b| *b).collect();
+        let a : HashSet<&char> = l[i-j..*i].iter().collect();
         a.len() == j
     }).next();
     println!("{:?}", n.unwrap());

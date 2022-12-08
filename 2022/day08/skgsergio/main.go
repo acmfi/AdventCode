@@ -38,7 +38,7 @@ func plot(points map[Point]int, scale int, name string) {
 	colorsHex := []string{
 		"D2FBD4", "BDE6C6", "A7D1B9", "92BCAB", "7DA79E",
 		"679390", "527E83", "3D6975", "275468", "123F5A",
-		"FF0000",
+		"600000", "FF0000",
 	}
 
 	// Convert HEX colors to RGBA
@@ -110,6 +110,7 @@ func solve(input *os.File) (int, int) {
 	panicOnErr(scanner.Err())
 
 	visibleTrees := map[Point]int{} // Just for ploting purposes
+	treeHouse := Point{0, 0}
 
 	dirs := []Point{{0, -1}, {0, 1}, {-1, 0}, {1, 0}}
 	for currTree, currHeight := range patch {
@@ -139,6 +140,7 @@ func solve(input *os.File) (int, int) {
 		}
 
 		if score > s2 {
+			treeHouse = currTree
 			s2 = score
 		}
 	}
@@ -152,6 +154,7 @@ func solve(input *os.File) (int, int) {
 			combined[tree] = 10
 		}
 	}
+	combined[treeHouse] = 11
 	plot(combined, 4, "combined")
 
 	return s1, s2

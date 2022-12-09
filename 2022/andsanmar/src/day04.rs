@@ -9,7 +9,7 @@ fn star1(l : &Struct) {
 
 
 fn star2(l : &Struct) {
-    let ov = |a,b,c,d| {
+    let ov = |a,b,c,_d| {
         a <= c && b >= c
     };
     println!("{:?}", l.iter().filter(|v| ov(v[0], v[1], v[2], v[3]) || ov(v[2], v[3], v[0], v[1])).count());

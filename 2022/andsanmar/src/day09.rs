@@ -87,17 +87,15 @@ fn star1(l : &Struct) {
 
 fn star2(l : &Struct) {
     let mut pos : HashSet<(i64,i64)> = HashSet::new();
-    let mut h = (0,0);
-    let mut t = [(0,0);9];
+    let mut t = [(0,0);10];
 
     for (d,n) in l {
         for _ in 0..*n {
-            h = mov(h, d);
-            t[0] = next_pos2(h, t[0]);
-            for i in 1..9 {
+            t[0] = mov(t[0], d);
+            for i in 1..10 {
                 t[i] = next_pos2(t[i-1],t[i]);
             }
-            pos.insert(t[8]);
+            pos.insert(t[9]);
         }
     }
     

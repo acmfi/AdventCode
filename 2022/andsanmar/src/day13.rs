@@ -1,4 +1,4 @@
-#[derive(Debug,Clone)]
+#[derive(Debug)]
 enum Elem {
     List(Vec<Elem>),
     Int(i32)
@@ -11,19 +11,13 @@ type Struct = Vec<(Elem,Elem)>;
 
 impl PartialEq for Elem {
     fn eq(&self, other: &Self) -> bool {
-        if let (Int(n1), Int(n2)) = (self, other) {
-            return n1 == n2;
+        let f = |v1 : &Vec<Elem>, v2 : &Vec<Elem>| {v1.iter().zip(v2).fold(true, |acc,(e1,e2)| acc && e1 == e2) && v1.len() == v2.len()};
+        match (self, other) {
+            (Int(n1), Int(n2)) => {n1 == n2},
+            (List(v1), Int(n2)) => {f(v1,&vec![Int(*n2)])},
+            (Int(n1), List(v2)) => {f(&vec![Int(*n1)],v2)},
+            (List(v1), List(v2)) => {f(v1,v2)},
         }
-
-        let v1 = match self {
-            Int(n) => { vec![Int(*n)] },
-            List(v) => { v.to_vec() }
-        };
-        let v2 = match other {
-            Int(n) => { vec![Int(*n)] },
-            List(v) => { v.to_vec() }
-        };
-        v1.iter().zip(&v2).fold(true, |acc,(e1,e2)| acc && e1 == e2) && v1.len() == v2.len()
     }
 }
 
@@ -37,35 +31,32 @@ impl PartialOrd for Elem {
 
 impl Ord for Elem {
     fn cmp(&self, other: &Self) -> Ordering {
-        // println!("Compare {:?} {:?}", &self, &other);
-        if let (Int(n1), Int(n2)) = (self, other) {
-            return n1.cmp(n2);
-        }
-        let v1 = match self {
-            Int(n) => { vec![Int(*n)] },
-            List(v) => { v.to_vec() }
+        let f = |v1 : &Vec<Elem>, v2 : &Vec<Elem>| {
+            let r = v1.iter().zip(v2).fold(Ordering::Equal, |acc,(e1,e2)| {
+                if acc == Ordering::Equal {(*e1).cmp(&e2)} else {acc}});
+            if r == Ordering::Equal {
+                v1.len().cmp(&v2.len())
+            } else {
+                r
+            }
         };
-        let v2 = match other {
-            Int(n) => { vec![Int(*n)] },
-            List(v) => { v.to_vec() }
-        };
-        let r = v1.iter().zip(&v2).fold(Ordering::Equal, |acc,(e1,e2)| {
-            if acc == Ordering::Equal {(*e1).cmp(&e2)} else {acc}});
-        if r == Ordering::Equal {
-            v1.len().cmp(&v2.len())
-        } else {
-            r
+        match (self, other) {
+            (Int(n1), Int(n2)) => {n1.cmp(n2)},
+            (List(v1), Int(n2)) => {f(v1,&vec![Int(*n2)])},
+            (Int(n1), List(v2)) => {f(&vec![Int(*n1)],v2)},
+            (List(v1), List(v2)) => {f(v1,v2)},
         }
     }
 }
 
 fn star1(l : &Struct) {
-    let mut r = 0;
-    for (i,(a,b)) in l.iter().enumerate() {
+    let r = l.iter().enumerate().fold(0, |acc,(i,(a,b))| {
         if a < b {
-            r += i + 1;
+            acc + i + 1
+        } else {
+            acc
         }
-    }
+    });
     println!("{}", r);
 }
 
@@ -76,17 +67,14 @@ fn star2(l : Struct) {
     l.push(&v1);
     l.push(&v2);
     l.sort();
-    let mut pos1 = 0;
-    let mut pos2 = 0;
-    for (i,e) in l.iter().enumerate() {
-        if *e == &v1 {
-           pos1 = i +1;
+    let pos = l.iter().enumerate().filter_map(|(i,e)| {
+        if *e == &v1 || *e == &v2 {
+            Some(i+1)
+        } else {
+            None
         }
-        if *e == &v2 {
-           pos2 = i +1;
-        }
-    }
-    println!("{:?}", pos1*pos2);
+    });
+    println!("{:?}", pos.fold(1, |acc,n| n*acc));
 }
 
 fn parse(input : &[char], index : usize) -> (Elem,usize) {

@@ -1,6 +1,21 @@
-use std::{error::Error, io::{self, Read}, result};
+use std::{error::Error, io::{self, Read}, iter::Peekable, result};
 
 use itertools::Itertools;
+
+fn consume_while<E, I, F>(p: &mut Peekable<I>, f: F) -> usize where I: Iterator<Item = E>, F: Fn(&E) -> bool {
+    let mut cnt = 0;
+    while {
+        match p.peek() {
+            Some(next) => f(next),
+            None => false,
+        }
+    } {
+        cnt += 1;
+        p.next();
+    }
+
+    cnt
+}
 
 fn main() -> result::Result<(), Box<dyn Error>> {
     let mut input = String::new();
@@ -21,11 +36,25 @@ fn main() -> result::Result<(), Box<dyn Error>> {
     left.sort();
     right.sort();
 
-    let diff: i32 = left.into_iter().zip(right.into_iter())
+    let diff: i32 = left.iter().zip(right.iter())
         .map(|(l, r)| (l - r).abs())
         .sum();
 
-    println!("{}", diff);
+    let mut left_it = left.into_iter().peekable();
+    let mut right_it = right.into_iter().peekable();
+
+    let mut similarity = 0;
+
+    while let (Some(next_left), Some(_)) = (left_it.peek().copied(), right_it.peek().copied()) {
+        let current_left_count = consume_while(&mut left_it, |e| *e == next_left);
+        let _ = consume_while(&mut right_it, |e| *e < next_left);
+        let current_right_count = consume_while(&mut right_it, |e| *e == next_left);
+
+        similarity += current_left_count * current_right_count * next_left as usize;
+    }
+
+    println!("Diff: {}", diff);
+    println!("Similarity: {}", similarity);
+
     Ok(())
 }
-// 1189304

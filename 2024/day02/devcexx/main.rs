@@ -1,7 +1,36 @@
 use std::{error::Error, io::{self, Read}, result};
 use itertools::Itertools;
 
-fn check_safety<I: Iterator<Item = i32>>(mut input: I) -> bool {
+struct Except<I> {
+    iterator: I,
+    skip_index: usize,
+    _cur_index: usize
+}
+
+impl<I> Except<I> {
+    fn new(iterator: I, skip_index: usize) -> Except<I> {
+        Except {
+            iterator,
+            skip_index,
+            _cur_index: 0
+        }
+    }
+}
+
+impl<E, I> Iterator for Except<I> where I: Iterator<Item = E> {
+    type Item = E;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self._cur_index == self.skip_index {
+            self.iterator.next();
+        }
+
+        self._cur_index += 1;
+        self.iterator.next()
+    }
+}
+
+fn check_fully_safe<I: Iterator<Item = i32>>(mut input: I) -> bool {
     fn pair_valid(l: i32, r: i32, dir: i32) -> bool {
         let diff = l - r;
         diff.signum() == dir && diff * dir <= 3
@@ -28,31 +57,56 @@ fn check_safety<I: Iterator<Item = i32>>(mut input: I) -> bool {
     return true;
 }
 
+fn check_almost_safe(elems: &[i32]) -> bool {
+    if elems.len() <= 1 {
+        return true;
+    }
+
+    for i in 0..elems.len() {
+        if check_fully_safe(Except::new(elems.iter().copied(), i)) {
+            return true;
+        }
+    }
+
+    false
+}
+
 fn main() -> result::Result<(), Box<dyn Error>> {
     let mut input = String::new();
 
     io::stdin().read_to_string(&mut input)?;
 
-    let nsafe = input.lines().into_iter()
+    let lines = input.lines().into_iter()
         .enumerate()
-        .try_fold(0, |acc, (line_idx, line)| {
+        .filter_map(|(line_idx, line)| {
             let trim = line.trim();
             if trim.is_empty() {
-                return Ok::<_, String>(acc);
+                return None;
             }
 
-            let is_safe = trim.split(" ")
+            let parsed_line: Result<Vec<_>, _> = trim.split(" ")
                 .map(|entry| entry.parse::<i32>().map_err(|_| format!("Invalid line {}", line_idx + 1)))
-                .process_results(|entries| check_safety(entries))?;
+                .try_collect();
+            Some(parsed_line)
+        });
 
-            Ok(if is_safe {
-                acc + 1
-            } else {
-                acc
-            })
-        })?;
+    let mut fully_safe: u32 = 0;
+    let mut almost_safe: u32 = 0;
+
+    for line in lines {
+        let line = line?;
+
+        if check_fully_safe(line.iter().copied()) {
+            fully_safe += 1;
+        }
+
+        if check_almost_safe(&line) {
+            almost_safe += 1;
+        }
+    }
 
 
-    println!("{}", nsafe);
+    println!("Fully safe: {}", fully_safe);
+    println!("Almost safe: {}", almost_safe);
     Ok(())
 }
